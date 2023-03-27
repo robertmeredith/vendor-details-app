@@ -1,0 +1,35 @@
+const { check, body, validationResult } = require('express-validator')
+
+function handleValidationError() {
+  return (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    } else {
+      next()
+    }
+  }
+}
+
+const register = [
+  check('username', 'Username is required').not().isEmpty(),
+  check('email', 'Please include a valid email').isEmail(),
+  check('username', 'Username must be at least 4 characters').isLength({
+    min: 4,
+  }),
+  check('password', 'Password must be at least 6 characters').isLength({
+    min: 6,
+  }),
+  handleValidationError(),
+]
+
+const login = [
+  check('email', 'Email is required').not().isEmpty(),
+  check('password', 'Password is required').not().isEmpty(),
+  handleValidationError(),
+]
+
+module.exports = {
+  register,
+  login,
+}
