@@ -8,6 +8,8 @@ const connectDB = require('./db.js')
 // Initialise express
 const express = require('express')
 const app = express()
+// Enables default handling of async errors without try catch
+require('express-async-errors')
 
 // Import Routes
 const authRouter = require('./routes/authRouter')
@@ -30,11 +32,7 @@ app.use('/api/v1/users', userRouter)
 app.use('/api/v1/submissions', submissionRouter)
 app.use('/api/v1/vendors', vendorRouter)
 
-app.use('/', (req, res) => {
-  res.send('Hello World')
-})
 app.use(notFoundMiddleware)
-
 app.use(errorHandlerMiddleware)
 
 // Function to connect to database, then if successful spin up server

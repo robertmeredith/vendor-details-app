@@ -17,7 +17,7 @@ const {
   deleteVendor,
 } = require('../controllers/vendorController')
 
-// GET ALL VENDORS - CREATE VENDOR
+// Get all vendors / create vendor
 router.route('/').get(getAllVendors).post(authMiddleware, createVendor)
 
 // GET - all user vendors

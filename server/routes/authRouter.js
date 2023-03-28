@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 
-
 // import Validation
 const authValidation = require('./validation/authValidation')
 

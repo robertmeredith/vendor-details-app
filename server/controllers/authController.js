@@ -44,7 +44,6 @@ const register = async (req, res, next) => {
 // LOGIN
 const login = async (req, res, next) => {
   const { email, password } = req.body
-  console.log('USER', req.user)
 
   const user = await User.findOne({ email })
 
@@ -57,7 +56,14 @@ const login = async (req, res, next) => {
     throw new CustomError.Unauthenticated('Invalid Credentials')
   }
 
-  res.status(StatusCodes.OK).json({ user })
+  const token = createJWT({ userId: user._id, username: user.username })
+
+  res.status(200).json({
+    user: {
+      username: user.username,
+    },
+    token,
+  })
 }
 
 module.exports = {

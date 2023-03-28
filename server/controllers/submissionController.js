@@ -16,7 +16,7 @@ const getAllSubmissions = async (req, res) => {
       },
     ],
   })
-  res.status(200).json({ submissions })
+  res.status(200).json({ count: submissions.length, submissions })
 }
 
 // CREATE SUBMISSION
@@ -35,18 +35,42 @@ const createSubmission = async (req, res) => {
 }
 
 // GET SINGLE SUBMISSION
-const getSingleSubmission = async (req, res) => {
+const getSingleSubmission = async (req, res, next) => {
   const { id: submissionId } = req.params
 
   const submission = await Submission.findById(submissionId)
 
+  if (!submission) {
+    return next(
+      new CustomError.NotFound(
+        `No user submission found with id ${submissionId}`
+      )
+    )
+  }
+  res.status(StatusCodes.OK).json({ submission })
+}
+
+// EDIT SUBMISSION
+const editSubmission = async (req, res) => {
+  const { id: submissionId } = req.params
+  console.log('REQ BODY', req.body)
+
+  const submission = await Submission.findById(submissionId)
   if (!submission) {
     throw new CustomError.NotFound(
       `No user submission found with id ${submissionId}`
     )
   }
 
-  res.status(StatusCodes.OK).json({ submission })
+  const updatedSubmission = await Submission.findByIdAndUpdate(
+    submissionId,
+    req.body,
+    { new: true }
+  )
+
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Success! Submission updated', updatedSubmission })
 }
 
 // DELETE SUBMISSION
@@ -64,12 +88,21 @@ const deleteSubmission = async (req, res) => {
 
 // GET CURRENT USER SUBMISSIONS
 const getCurrentUserSubmissions = async (req, res) => {
-  res.send('getCurrentUserSubmissions')
+  // take user from auth middleware
+  const { user } = req
+
+  // find submissons associated with user
+  const submissions = await Submission.find({ user: user._id })
+  console.log('getCurrentUserSubmissions', submissions)
+
+  res.status(StatusCodes.OK).json({ count: submissions.length, submissions })
 }
 
 module.exports = {
   getAllSubmissions,
   createSubmission,
   getSingleSubmission,
+  editSubmission,
+  deleteSubmission,
   getCurrentUserSubmissions,
 }

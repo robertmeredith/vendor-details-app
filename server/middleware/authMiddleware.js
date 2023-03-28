@@ -3,7 +3,6 @@ const { isTokenValid } = require('../utils/jwt')
 const User = require('../models/userModel')
 
 // AUTH MIDDLEWARE - takes token from auth header
-
 const authMiddleware = async (req, res, next) => {
   const { authorization } = req.headers
 

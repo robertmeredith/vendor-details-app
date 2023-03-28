@@ -1,29 +1,26 @@
-const {StatusCodes} = require('http-status-codes')
+const { StatusCodes } = require('http-status-codes')
 
-const errorHandler = (error, req, res, next) => {
-  // If statusCode is the default 200 then assign the default error code 500
-  if (res.statusCode === 200) {
-    res.status(500)
-  }
-
+const errorHandler = (err, req, res, next) => {
   console.log('Res status: ', res.statusCode)
-  console.log('Message: ', error.message)
-  console.log('Stack: ', error.stack)
+  console.log('Error Name', err.name)
+  console.log('Error Value', err.value)
+  console.log('Error Code', err.code)
+  console.log('Message: ', err.message)
+  console.log('Stack: ', err.stack)
 
-  res.json({
-    status: res.statusCode,
-    message: error.message || 'Something went wrong',
-    stack: error.stack,
-  })
-}
-
-
-const errorHandlerMiddleware = (err, req, res, next) => {
+  // Sets default message and error code for any errors thrown that aren't custom and we don't handle manually
   let customError = {
-    // set default
-    statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR
+    statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR, // 500
+    msg: err.message || 'Something went wrong, try again later',
   }
-  
+
+  // Cast Error - when item ID is malformatted e.g. missing a char
+  if (err.name === 'CastError') {
+    ;(customError.msg = `No item found with ID : ${err.value}`),
+      (customError.statusCode = StatusCodes.NOT_FOUND) // 404
+  }
+
+  return res.status(customError.statusCode).json({ msg: customError.msg })
 }
 
 module.exports = errorHandler
