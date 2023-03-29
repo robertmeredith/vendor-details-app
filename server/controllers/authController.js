@@ -43,6 +43,7 @@ const register = async (req, res, next) => {
 
 // LOGIN
 const login = async (req, res, next) => {
+  console.log('HITTING LOGIN CONTROLLER');
   const { email, password } = req.body
 
   const user = await User.findOne({ email })

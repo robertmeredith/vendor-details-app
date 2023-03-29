@@ -13,7 +13,7 @@ const getAllVendors = async (req, res, next) => {
   // if no user query string supplied return all vendors
   if (!user) {
     const vendors = await Vendor.find({})
-    return res.status(200).json(vendors)
+    return res.status(200).json({ count: vendors.length, vendors })
   }
 
   if (mongoose.isValidObjectId(user)) {
