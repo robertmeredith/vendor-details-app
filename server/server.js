@@ -27,6 +27,10 @@ app.use(morgan('tiny'))
 // Parse JSON bodies
 app.use(express.json())
 
+app.get('/api/v1', (req, res) => {
+  res.status(205).json({ msg: 'Welcome' })
+})
+
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/submissions', submissionRouter)

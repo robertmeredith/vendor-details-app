@@ -5,9 +5,10 @@ const { createJWT } = require('../utils/jwt')
 
 // REGISTER
 const register = async (req, res, next) => {
-  const { username, email, password } = req.body
 
-  if (!username || !email || !password) {
+  const { name, email, password } = req.body
+
+  if (!name || !email || !password) {
     res.status(400)
     throw new Error('Please provide username, email and password')
   }
@@ -24,18 +25,18 @@ const register = async (req, res, next) => {
   const role = isFirstAccount ? 'admin' : 'user'
 
   const user = new User({
-    username,
+    name,
     email,
     password,
     role,
   })
   await user.save()
 
-  const token = createJWT({ userId: user._id, username: user.username })
+  const token = createJWT({ userId: user._id, name: user.name })
 
   res.status(200).json({
     user: {
-      username: user.username,
+      name: user.name,
     },
     token,
   })
@@ -43,7 +44,7 @@ const register = async (req, res, next) => {
 
 // LOGIN
 const login = async (req, res, next) => {
-  console.log('HITTING LOGIN CONTROLLER');
+  console.log('HITTING LOGIN CONTROLLER')
   const { email, password } = req.body
 
   const user = await User.findOne({ email })

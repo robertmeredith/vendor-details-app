@@ -21,8 +21,8 @@ function handleValidationError() {
 
 // REGISTER validation
 const register = [
-  check('username', 'Username is required').not().isEmpty(),
-  check('email', 'Please include a valid email').isEmail(),
+  // check('username', 'Username is required').not().isEmpty(),
+  check('email', 'Please include a valid email').isEmail().normalizeEmail(),
   check('username', 'Username must be at least 4 characters').isLength({
     min: 4,
   }),

@@ -1,22 +1,25 @@
-import Navbar from './Components/Navbar'
-import Home from './Pages/Home.js'
-import Submissions from './Pages/Submissions'
-import Login from './Pages/Login'
-import Vendors from './Pages/Vendors'
+import Navbar from './components/Navbar'
+import Home from './pages/Home.js'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Submissions from './pages/Submissions'
+import Vendors from './pages/Vendors'
+import SubmissionFormPage from './pages/SubmissionFormPage'
 
 import { Route, Routes } from 'react-router-dom'
 
 function App() {
   return (
-    <div>
+    <div className="container m-auto">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="submissions" element={<Submissions />} />
-        <Route path="vendors" element={<Vendors />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/submissions" element={<Submissions />} />
+        <Route path="/vendors" element={<Vendors />} />
+        <Route path="/:userId/form" element={<SubmissionFormPage />} />
       </Routes>
-
     </div>
   )
 }

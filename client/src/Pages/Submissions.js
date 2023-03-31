@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import SubmissionItem from '../Components/SubmissionItem'
+import SubmissionItem from '../components/SubmissionItem'
+
 
 const Submissions = () => {
   const [submissions, setSubmissions] = useState(undefined)
@@ -8,7 +9,7 @@ const Submissions = () => {
 
   useEffect(() => {
     axios
-      .get('/submissions')
+      .get('/api/v1/submissions')
       .then((response) => {
         console.log(response.data)
         setSubmissions(response.data.submissions)

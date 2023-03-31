@@ -10,10 +10,13 @@ const Login = () => {
     console.log('EMAIL', email, 'PASSWORD', password)
   }, [email, password])
 
-  const handleClick = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/auth/login', { email, password })
+      const response = await axios.post('/api/v1/auth/login', {
+        email,
+        password,
+      })
       console.log(response)
     } catch (error) {
       console.log('ERROR', error.response.data.msg)
@@ -24,10 +27,8 @@ const Login = () => {
     <div className="flex items-center justify-center">
       <div className="card w-96 bg-base-100 shadow-xl mt-60">
         <div className="card-body">
-          <form>
-            <h1 className="font-bold text-center uppercase">
-              Welcome to the Vendor App
-            </h1>
+          <form onSubmit={handleSubmit}>
+            <h1 className="font-bold text-center uppercase">Welcome Back!</h1>
             <p className="mt-6 text-center">Please sign in to your account</p>
             <div className="form-control w-full max-w-xs">
               <input
@@ -36,6 +37,7 @@ const Login = () => {
                 type="text"
                 name="email"
                 className="input input-bordered input-accent w-full max-w-xs mt-6"
+                value={email}
               />
             </div>
             <div className="form-control w-full max-w-xs">
@@ -45,22 +47,17 @@ const Login = () => {
                 type="password"
                 name="password"
                 className="input input-bordered input-accent w-full max-w-xs mt-6"
+                value={password}
               />
             </div>
 
             <button
               className="btn btn-accent w-full mt-8 uppercase"
-              onClick={(e) => handleClick(e)}
+              type="submit"
             >
               Sign In
             </button>
           </form>
-
-          {/* <h2 className="card-title cen">Card title!</h2>
-          <p>If a dog chews shoes whose shoes does he choose?</p>
-          <div className="card-actions justify-end">
-            <button className="btn btn-primary">Buy Now</button>
-          </div> */}
         </div>
       </div>
     </div>
