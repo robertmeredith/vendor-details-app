@@ -30,6 +30,9 @@ const Navbar = ({ title }) => {
               <Link to="/">Home</Link>
             </li>
             <li>
+              <Link to="/640fc4c6d69dbeb3b43c62e8/form">Form</Link>
+            </li>
+            <li>
               <Link to="/submissions">Submissions</Link>
             </li>
             <li>

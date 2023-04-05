@@ -6,6 +6,14 @@ const Vendor = require('../models/vendorModel')
 const CustomError = require('../errors')
 const { StatusCodes } = require('http-status-codes')
 
+// GET USER VENDORS
+const getVendors = async (req, res) => {
+  const { userId } = req.query
+  const vendors = await Vendor.find({ user: userId })
+
+  res.status(200).json({ count: vendors.length, vendors })
+}
+
 // GET ALL VENDORS
 const getAllVendors = async (req, res, next) => {
   const { user } = req.query
@@ -106,6 +114,7 @@ const deleteVendor = async (req, res) => {
 }
 
 module.exports = {
+  getVendors,
   getAllVendors,
   getCurrentUserVendors,
   getSingleVendor,

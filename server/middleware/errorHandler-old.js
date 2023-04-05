@@ -2,6 +2,7 @@ const { StatusCodes } = require('http-status-codes')
 
 const errorHandler = (error, req, res, next) => {
   console.log('ERROR HANDLER TRIGGERED')
+
   // If statusCode is the default 200 then assign the default error code 500
   if (res.statusCode === 200) {
     res.status(500)

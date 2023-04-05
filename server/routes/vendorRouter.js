@@ -9,6 +9,7 @@ const Vendor = require('../models/vendorModel')
 
 // import controller actions
 const {
+  getVendors,
   getAllVendors,
   getSingleVendor,
   getCurrentUserVendors,
@@ -18,7 +19,10 @@ const {
 } = require('../controllers/vendorController')
 
 // Get all vendors / create vendor
-router.route('/').get(getAllVendors).post(authMiddleware, createVendor)
+router
+  .route('/')
+  .get(getVendors)
+  .post(authMiddleware, createVendor)
 
 // GET - all user vendors
 router.get('/showAllMyVendors', authMiddleware, getCurrentUserVendors)

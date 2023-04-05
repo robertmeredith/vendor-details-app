@@ -5,7 +5,6 @@ const { createJWT } = require('../utils/jwt')
 
 // REGISTER
 const register = async (req, res, next) => {
-
   const { name, email, password } = req.body
 
   if (!name || !email || !password) {
@@ -63,6 +62,7 @@ const login = async (req, res, next) => {
   res.status(200).json({
     user: {
       username: user.username,
+      id: user.id,
     },
     token,
   })
