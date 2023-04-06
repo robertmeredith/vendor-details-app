@@ -9,7 +9,8 @@ const FormRow = ({
   return (
     <div className={'form-control w-full max-w-xs'}>
       <label htmlFor={name}>{labelText || name}</label>
-      <input
+      <input className="input input-bordered"
+        name={name}
         type={type}
         value={value}
         onChange={handleChange}

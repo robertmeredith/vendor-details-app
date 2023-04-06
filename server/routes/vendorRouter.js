@@ -30,7 +30,7 @@ router.get('/showAllMyVendors', authMiddleware, getCurrentUserVendors)
 // GET SINGLE VENDOR
 router.get('/:vendorId', getSingleVendor)
 
-// UODATE SINGLE VENDOR
+// UPDATE SINGLE VENDOR
 router.put('/:id', authMiddleware, updateVendor)
 
 // DELETE SINGLE VENDOR

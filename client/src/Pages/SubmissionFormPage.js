@@ -130,13 +130,8 @@ const InputGroup = ({
     })
   }, [type, vendor])
 
-  // HANDLE FILTERING VENDORS
-  // useEffect(() => {
-  //   !vendor.name || !filtering
-  //     ? setFilteredVendors([])
-  //     : setFilteredVendors(vendors.filter((v) => v.name.includes(vendor.name)))
-  // }, [vendor.name])
 
+  // SELECT VENDOR FROM FILTERED LIST
   const selectVendor = (vendor) => {
     setVendor(vendor)
     setFilteredVendors([])

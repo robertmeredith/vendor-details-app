@@ -38,8 +38,9 @@ const getAllVendors = async (req, res, next) => {
 
 // CREATE VENDOR
 const createVendor = async (req, res, next) => {
+  console.log('INSIDE VENDOR ROUTER');
   const { user } = req
-  const { name, instagram, website } = req.body
+  const { name, instagram, website, email } = req.body
 
   // Parse Instagram username
   function getInstagramUsername(url) {
@@ -61,6 +62,7 @@ const createVendor = async (req, res, next) => {
     name,
     instagram: `@${getInstagramUsername(instagram)}`,
     website,
+    email,
   })
 
   res.status(200).json({ vendor })
