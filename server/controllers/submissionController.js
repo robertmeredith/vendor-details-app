@@ -38,7 +38,13 @@ const createSubmission = async (req, res) => {
 const getSingleSubmission = async (req, res, next) => {
   const { id: submissionId } = req.params
 
-  const submission = await Submission.findById(submissionId)
+  const submission = await Submission.findById(submissionId).populate({
+    path: 'vendors',
+    populate: {
+      path: 'vendor',
+      model: 'Vendor',
+    },
+  })
 
   if (!submission) {
     return next(
@@ -53,7 +59,6 @@ const getSingleSubmission = async (req, res, next) => {
 // EDIT SUBMISSION
 const editSubmission = async (req, res) => {
   const { id: submissionId } = req.params
-  console.log('REQ BODY', req.body)
 
   const submission = await Submission.findById(submissionId)
   if (!submission) {
@@ -93,7 +98,6 @@ const getCurrentUserSubmissions = async (req, res) => {
 
   // find submissons associated with user
   const submissions = await Submission.find({ user: user._id })
-  console.log('getCurrentUserSubmissions', submissions)
 
   res.status(StatusCodes.OK).json({ count: submissions.length, submissions })
 }

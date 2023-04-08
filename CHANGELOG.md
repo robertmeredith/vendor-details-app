@@ -1,3 +1,17 @@
+## NEXT
+- clear vendors and add some kind of validation of email, instagram names etc
+- front end - have instagram input automagically parse username on leaving focus?
+
+## 2023-04-08
+- implemented Formik package to help with forms
+- started implementing validation with Yup package
+- implemented function to format Instagram username onBlur
+
+## 2023-04-06
+- implemented vendor listings page with filter of vendors
+- added form for basic creating and editing of vendors with conditional rendering of buttons
+- added email to vendor model on back-end
+
 ## 2023-03-31
 
 

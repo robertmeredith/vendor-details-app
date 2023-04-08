@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import SubmissionItem from '../components/SubmissionItem'
+import SubmissionListItem from '../components/SubmissionListItem'
+import { useQuery } from '@tanstack/react-query'
+import Loading from '../components/Loading'
 
+const fetchAllUserSubmissions = async () => {
+  // NEEDS CHANGING TO USER SUBMISSIONS - CURRENTLY FETCHING ALL
+  const { data } = await axios.get('/api/v1/submissions')
+  return data
+}
 
 const Submissions = () => {
-  const [submissions, setSubmissions] = useState(undefined)
-  console.log('SUBMISSIONS', submissions)
+  const userSubmissionsQuery = useQuery(
+    ['submissions'],
+    fetchAllUserSubmissions
+  )
 
-  useEffect(() => {
-    axios
-      .get('/api/v1/submissions')
-      .then((response) => {
-        console.log(response.data)
-        setSubmissions(response.data.submissions)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }, [])
+  if (userSubmissionsQuery.isLoading) return <Loading />
+  if (userSubmissionsQuery.isError) return <p>Error</p>
+
+  console.log('SUBMISSIONS PAGE - submissions', userSubmissionsQuery.data)
 
   return (
     <div>
-      <h1 className="text-3xl text-center">Submissions</h1>
-      {!submissions ? (
-        <div>Loading</div>
-      ) : (
-        submissions.map((submission) => {
-          return <SubmissionItem submission={submission} />
-        })
-      )}
+      <h1 className="text-3xl text-center">Submissions Page</h1>
+      {userSubmissionsQuery.data.submissions.map((submission) => {
+        return <SubmissionListItem key={submission._id} submission={submission} />
+      })}
     </div>
   )
 }

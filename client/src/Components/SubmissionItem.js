@@ -1,15 +1,12 @@
-import React from 'react'
 import VendorItem from './VendorItem'
 
 const SubmissionItem = ({ submission }) => {
-  const { client, vendors } = submission
-
   return (
-    <div>
+    <div className="border border-indigo-600">
       <h1>SUBMISSION ITEM</h1>
-      <h2>Client: {client}</h2>
-      {vendors.map((vendorItem) => {
-        return <VendorItem vendorItem={vendorItem} />
+      <p>Client name: {submission.client}</p>
+      {submission.vendors.map((vendor) => {
+        return <VendorItem vendorDetails={vendor} />
       })}
     </div>
   )

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { useEffect } from 'react'
 import axios from 'axios'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { VendorForm } from '../components/VendorForm'
 import { VendorList } from '../components/VendorList'
 import { useQueryClient } from '@tanstack/react-query'
+import NewVendorForm from '../components/NewVendorForm'
 
 // GET VENDORS FUNCTION
 const getVendors = async () => {
@@ -106,8 +106,6 @@ const Vendors = () => {
   if (vendorsQuery.isError)
     return <h1>{vendorsQuery.error.response.data.msg}</h1>
 
-  console.log(vendorsQuery.data.vendors)
-
   // FILTER VENDORS WHEN SEARCHING
   const filteredVendors = vendorsQuery.data.vendors.filter((vendor) =>
     vendor.name.toLowerCase().includes(filter.toLowerCase())
@@ -145,8 +143,14 @@ const Vendors = () => {
         </div>
       </div>
       {/* EDIT VENDOR FORM */}
+      {/* <NewVendorForm
+        vendorDetails={vendorDetails}
+        setShowForm={setShowForm}
+        setVendorDetails={setVendorDetails}
+        submitVendorForm={submitVendorForm}
+      /> */}
       {showForm && (
-        <VendorForm
+        <NewVendorForm
           vendorDetails={vendorDetails}
           setShowForm={setShowForm}
           setVendorDetails={setVendorDetails}
