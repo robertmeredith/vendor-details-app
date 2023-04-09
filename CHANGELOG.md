@@ -1,6 +1,11 @@
 ## NEXT
-- clear vendors and add some kind of validation of email, instagram names etc
-- front end - have instagram input automagically parse username on leaving focus?
+- [] clear vendors and add some kind of validation of email, instagram names etc
+- [] front end - have instagram input automagically parse username on leaving focus?
+- [] implement form submission mutation
+
+## 2023-04-09
+- updated submission form to allow adding and deleting of rows
+- current form uses own state and input implementation - need to try formik again
 
 ## 2023-04-08
 - implemented Formik package to help with forms

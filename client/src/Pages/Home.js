@@ -1,4 +1,3 @@
-import React from 'react'
 import Hero from '../components/Hero'
 import axios from 'axios'
 import { useEffect } from 'react'

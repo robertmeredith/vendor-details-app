@@ -1,4 +1,3 @@
-import React from 'react'
 import VendorCard from './VendorCard'
 
 export const VendorList = ({ filteredVendors, handleVendorSelect }) => {

@@ -21,7 +21,7 @@ const NewVendorForm = ({
 }) => {
   return (
     <div>
-      <h1>Anywhere in your app!</h1>
+      <h1>Vendor Form</h1>
       <Formik
         // enables Form to update if a different vendor is seleced to edit
         enableReinitialize={true}
@@ -92,7 +92,7 @@ const NewVendorForm = ({
             />
             {errors.email && touched.email && errors.email}
             {/* <p>{errors.email}</p> */}
-            <button type="submit" disabled={isSubmitting}>
+            <button type="submit" disabled={isSubmitting} className='btn btn-success'>
               Submit
             </button>
           </form>

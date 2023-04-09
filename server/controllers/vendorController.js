@@ -38,29 +38,28 @@ const getAllVendors = async (req, res, next) => {
 
 // CREATE VENDOR
 const createVendor = async (req, res, next) => {
-  console.log('INSIDE VENDOR ROUTER');
   const { user } = req
   const { name, instagram, website, email } = req.body
 
   // Parse Instagram username
-  function getInstagramUsername(url) {
-    const _regex =
-      // /^(?:@|(?:https?:\/\/)?(?:www\.)?instagr(?:\.am|am\.com)\/)?(\w+)\/?$/
-      /^(?:@|(?:https?:\/\/)?(?:www\.)?instagr(?:\.am|am\.com)\/)?([\w\.]+)\/?$/g
-    let match = _regex.exec(url)
-    console.log('MATCH', match)
-    if (match) {
-      return match[1]
-    } else {
-      res.status(400)
-      next(new Error('Not a valid instagram username'))
-    }
-  }
+  // function getInstagramUsername(url) {
+  //   const _regex =
+  //     // /^(?:@|(?:https?:\/\/)?(?:www\.)?instagr(?:\.am|am\.com)\/)?(\w+)\/?$/
+  //     /^(?:@|(?:https?:\/\/)?(?:www\.)?instagr(?:\.am|am\.com)\/)?([\w\.]+)\/?$/g
+  //   let match = _regex.exec(url)
+  //   console.log('MATCH', match)
+  //   if (match) {
+  //     return match[1]
+  //   } else {
+  //     res.status(400)
+  //     next(new Error('Not a valid instagram username'))
+  //   }
+  // }
 
   const vendor = await Vendor.create({
     user: user._id,
     name,
-    instagram: `@${getInstagramUsername(instagram)}`,
+    instagram,
     website,
     email,
   })

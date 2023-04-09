@@ -1,4 +1,3 @@
-import React from 'react'
 import FormRow from './FormRow'
 
 export const VendorForm = ({

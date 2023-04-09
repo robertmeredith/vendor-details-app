@@ -1,4 +1,3 @@
-import React from 'react'
 import VendorItem from './VendorItem'
 import { useNavigate } from 'react-router-dom'
 

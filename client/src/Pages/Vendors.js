@@ -83,15 +83,14 @@ const Vendors = () => {
     onSuccess: ({ vendor: newVendor }) => {
       const { vendors } = queryClient.getQueryData(['vendors'])
       queryClient.setQueryData(['vendors'], {
-        count: vendors.length,
+        count: vendors.length + 1,
         vendors: [...vendors, newVendor],
       })
     },
   })
 
   // HANDLE SUBMITTING VENDOR FORM
-  const submitVendorForm = (e) => {
-    e.preventDefault()
+  const submitVendorForm = (vendorDetails) => {
     if (vendorDetails._id) {
       updateVendorMutation.mutate(vendorDetails)
     } else {

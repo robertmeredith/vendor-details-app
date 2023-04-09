@@ -5,7 +5,7 @@ import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 
-// Create a client
+// Create a query client
 const queryClient = new QueryClient()
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
