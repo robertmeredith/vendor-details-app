@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { InputGroup } from '../components/InputGroup'
-import { InputGroupFormik } from '../components/InputGroupFormik'
+import { v4 as uuid } from 'uuid'
 
 const defaultVendorTypes = [
   'photographer',
@@ -12,9 +12,11 @@ const defaultVendorTypes = [
   'venue',
 ]
 
-const createEmptyVendor = (vendorType) => {
+// Function to create empty vendor object
+const createEmptyVendor = (type) => {
   return {
-    vendorType,
+    key: uuid(),
+    vendorType: type,
     vendor: {
       name: '',
       instagram: '',
@@ -34,18 +36,15 @@ const fetchVendors = async (id) => {
 const SubmissionFormPage = () => {
   const { userId } = useParams()
 
-  const [filteredVendors, setFilteredVendors] = useState([])
-
   // Create Initial State for Combined Form
   const [formState, setFormState] = useState(
     defaultVendorTypes.map((type) => createEmptyVendor(type))
   )
 
-  // Useeffect purely to display state
+  // Useeffect purely to display state - DELETE LATER
   useEffect(() => {
-    console.log('FILTERED VENDORS', filteredVendors)
     console.log('FORM STATE', formState)
-  }, [filteredVendors, formState])
+  }, [formState])
 
   // GET USER VENDORS
   const vendorsQuery = useQuery({
@@ -58,8 +57,8 @@ const SubmissionFormPage = () => {
     return <p>Loading....</p>
   }
 
-  // Remove Row 
-  const removeRow = (index) => {
+  // Remove Row
+  const removeFormInputRow = (index) => {
     setFormState((prevState) => {
       // Copy the previous state array
       const newState = [...prevState]
@@ -72,9 +71,7 @@ const SubmissionFormPage = () => {
 
   // Add Row
   const addRow = () => {
-    setFormState((prevState) => {
-      return [...prevState, createEmptyVendor('select')]
-    })
+    setFormState([...formState, createEmptyVendor('select')])
   }
 
   return (
@@ -88,16 +85,15 @@ const SubmissionFormPage = () => {
       >
         {formState.map((entry, index) => (
           <InputGroup
-            key={entry.vendorType}
+          // generate a unique key for each input group
+            key={entry.key}
             index={index}
             defaultType={entry.vendorType}
             defaultVendorTypes={defaultVendorTypes}
-            // handleChange={handleChange}
-            filteredVendors={filteredVendors}
             formState={formState}
             setFormState={setFormState}
             vendors={vendorsQuery.data.vendors}
-            removeRow={removeRow}
+            removeFormInputRow={removeFormInputRow}
           />
         ))}
 

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
-// INPUT GROUP
+
 export const InputGroup = ({
   defaultType,
   defaultVendorTypes,
   index,
   setFormState,
   vendors,
-  removeRow,
+  removeFormInputRow,
 }) => {
   const [vendorType, setVendorType] = useState(defaultType)
   const [vendor, setVendor] = useState({
@@ -103,7 +103,7 @@ export const InputGroup = ({
           )
         })}
       </ul>
-      <button className="btn btn-xs btn-primary" onClick={() => removeRow(index)}>
+      <button className="btn btn-xs btn-primary" onClick={() => removeFormInputRow(index)}>
         Remove
       </button>
     </div>
