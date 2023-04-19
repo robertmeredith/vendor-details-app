@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const Login = () => {
-  const [email, setEmail] = useState(undefined)
-  const [password, setPassword] = useState(undefined)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   useEffect(() => {
     console.log('EMAIL', email, 'PASSWORD', password)
@@ -12,11 +12,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/api/v1/auth/login', {
+      const {data} = await axios.post('/api/v1/auth/login', {
         email,
         password,
       })
-      console.log(response)
+      console.log('DATA:', data)
     } catch (error) {
       console.log('ERROR', error.response.data.msg)
     }

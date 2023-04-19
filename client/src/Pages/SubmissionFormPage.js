@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import { InputGroup } from '../components/InputGroup'
 import { v4 as uuid } from 'uuid'
+import { fetchVendors } from '../helpers/queryFunctions'
 
 const defaultVendorTypes = [
   'photographer',
@@ -27,14 +27,11 @@ const createEmptyVendor = (type) => {
   }
 }
 
-// FETCH VENDORS FUNCTION
-const fetchVendors = async (id) => {
-  const { data } = await axios.get(`/api/v1/vendors?userId=${id}`)
-  return data
-}
-
 const SubmissionFormPage = () => {
   const { userId } = useParams()
+
+  const [client, setClient] = useState('')
+  const [eventDate, setEventDate] = useState('')
 
   // Create Initial State for Combined Form
   const [formState, setFormState] = useState(
@@ -57,7 +54,7 @@ const SubmissionFormPage = () => {
     return <p>Loading....</p>
   }
 
-  // Remove Row
+  // Remove Form Input Row
   const removeFormInputRow = (index) => {
     setFormState((prevState) => {
       // Copy the previous state array
@@ -69,9 +66,9 @@ const SubmissionFormPage = () => {
     })
   }
 
-  // Add Row
-  const addRow = () => {
-    setFormState([...formState, createEmptyVendor('select')])
+  // Add Form Input Row
+  const addFormInputRow = () => {
+    setFormState((prevState) => [...prevState, createEmptyVendor('select')])
   }
 
   return (
@@ -83,9 +80,16 @@ const SubmissionFormPage = () => {
           console.log('FORM STATE ON SUBMIT', formState)
         }}
       >
+        {/* ADD INPUT CLIENT NAME */}
+        <input
+          type="text"
+          placeholder="client name"
+          className="border border-indigo-600"
+          onChange={() => setClient('')}
+        />
+        {/* ADD INPUT EVENT DATE */}
         {formState.map((entry, index) => (
           <InputGroup
-          // generate a unique key for each input group
             key={entry.key}
             index={index}
             defaultType={entry.vendorType}
@@ -100,7 +104,7 @@ const SubmissionFormPage = () => {
         <button className="btn btn-outline" type="submit">
           Submit
         </button>
-        <button className="btn btn-outline" onClick={addRow}>
+        <button className="btn btn-outline" onClick={addFormInputRow}>
           Add Vendor
         </button>
       </form>
