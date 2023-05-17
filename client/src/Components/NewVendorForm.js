@@ -1,101 +1,156 @@
-import { Formik } from 'formik'
-import FormikRow from './FormikRow'
+import { Formik, Form } from 'formik'
+import CustomInput from './CustomInput'
 import { formatInstagramUsername } from '../helpers/validationHelper'
-import * as Yup from 'yup'
+import { vendorSchema } from '../schemas'
+import axios from 'axios'
+import { useMutation } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 
-const VendorSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  instagram: Yup.string().max(30, 'Too Long!'),
-  website: Yup.string().url(),
-  email: Yup.string().email('Invalid email'),
-})
+// EDIT VENDOR FUNCTION
+const updateVendor = async (updatedVendor) => {
+  const { data } = await axios.put(
+    `/api/v1/vendors/${updatedVendor._id}`,
+    updatedVendor,
+    {
+      headers: {
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQyODAyNzgsImV4cCI6MTY4NDg4NTA3OH0.cY_CbIbLnzQpQcZJSnNZvehcUH6npsR7Ito8IYVpqI8',
+      },
+    }
+  )
+  return data
+}
+
+// CREATE VENDOR FUNCTION
+const createVendor = async (newVendor) => {
+  const { data } = await axios.post(`/api/v1/vendors`, newVendor, {
+    headers: {
+      Authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQyODAyNzgsImV4cCI6MTY4NDg4NTA3OH0.cY_CbIbLnzQpQcZJSnNZvehcUH6npsR7Ito8IYVpqI8',
+    },
+  })
+  return data
+}
+
+const initialVendorState = {
+  name: '',
+  instagram: '',
+  website: '',
+  email: '',
+}
+
+// NEW VENDOR FORM
 
 const NewVendorForm = ({
-  vendorDetails,
-  setVendorDetails,
-  submitVendorForm,
+  initialFormValues,
+  setInitialFormValues,
   setShowForm,
 }) => {
+  const queryClient = useQueryClient()
+
+  // UPDATE VENDOR MUTATION
+  const updateVendorMutation = useMutation({
+    mutationFn: updateVendor,
+    onSuccess: ({ vendor: updatedVendor }) => {
+      setShowForm(false)
+      const { vendors } = queryClient.getQueryData(['vendors'])
+      queryClient.setQueryData(['vendors'], {
+        count: vendors.length,
+        vendors: vendors.map((v) =>
+          updatedVendor._id === v._id ? updatedVendor : v
+        ),
+      })
+    },
+    onError: (error, vendorDetails) => setInitialFormValues(vendorDetails),
+  })
+
+  // CREATE VENDOR MUTATION
+  const createVendorMutation = useMutation({
+    mutationFn: createVendor,
+    onSuccess: ({ vendor: newVendor }) => {
+      setShowForm(false)
+      const { vendors } = queryClient.getQueryData(['vendors'])
+      queryClient.setQueryData(['vendors'], {
+        count: vendors.length + 1,
+        vendors: [...vendors, newVendor],
+      })
+    },
+    onError: (error, vendorDetails) => setInitialFormValues(vendorDetails),
+  })
+
+  // SUBMIT VENDOR FORM
+  const submitVendorForm = (vendorDetails) => {
+    // on backend check if user id matches record
+    if (vendorDetails._id) {
+      updateVendorMutation.mutate(vendorDetails)
+    } else {
+      createVendorMutation.mutate(vendorDetails)
+    }
+  }
+
   return (
     <div>
       <h1>Vendor Form</h1>
       <Formik
-        // enables Form to update if a different vendor is seleced to edit
+        // enableReinitialize allows Form to update if a different vendor is seleced to edit
         enableReinitialize={true}
-        initialValues={vendorDetails}
-        validationSchema={VendorSchema}
+        initialValues={initialFormValues}
+        validationSchema={vendorSchema}
         onSubmit={(values, { setSubmitting }) => {
-          // console.log(values)
-          // setTimeout(() => {
-          //   alert(JSON.stringify(values, null, 2))
-          //   setSubmitting(false)
-          // }, 400)
-          submitVendorForm(values)
+          setTimeout(() => {
+            submitVendorForm(values)
+            setSubmitting(false)
+          }, 2000)
         }}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          /* and other goodies */
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <FormikRow
+        {(props) => (
+          <Form>
+            {/* Vendor Name */}
+            <CustomInput
+              labelText="Vendor name"
               type="text"
               name="name"
-              handleChange={handleChange}
-              onBlur={handleBlur}
-              value={values.name}
               placeholder="name"
             />
-            {errors.name && touched.name && errors.name}
-            <FormikRow
+            {/* Instagram */}
+            <CustomInput
+              labelText="Instagram username"
               type="text"
               name="instagram"
-              handleChange={handleChange}
               onBlur={(event) => {
                 // call the built-in handleBlur
-                handleBlur(event)
-                // format the phone number
-                const formatted = formatInstagramUsername(values['instagram'])
+                props.handleBlur(event)
+                // format the instagram handle
+                const formatted = formatInstagramUsername(props.values['instagram'])
                 // set the formatted value
-                setFieldValue('instagram', formatted)
+                props.setFieldValue('instagram', formatted)
               }}
-              value={values.instagram}
               placeholder="instagram"
             />
-            {errors.instagram && touched.instagram && errors.instagram}
-            <FormikRow
+            {/* Website */}
+            <CustomInput
+              labelText="website"
               type="text"
               name="website"
-              handleChange={handleChange}
-              onBlur={handleBlur}
-              value={values.website}
               placeholder="website"
             />
-            {errors.website && touched.website && errors.website}
-            <FormikRow
+            {/* Email */}
+            <CustomInput
+              labelText="email"
               type="email"
               name="email"
-              handleChange={handleChange}
-              onBlur={handleBlur}
-              value={values.email}
               placeholder="email"
             />
-            {errors.email && touched.email && errors.email}
-            {/* <p>{errors.email}</p> */}
-            <button type="submit" disabled={isSubmitting} className='btn btn-success'>
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={props.isSubmitting}
+              className="btn btn-success"
+            >
               Submit
             </button>
-          </form>
+          </Form>
         )}
       </Formik>
     </div>

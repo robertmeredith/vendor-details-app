@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { VendorForm } from '../components/VendorForm'
+import { useQuery } from '@tanstack/react-query'
 import { VendorList } from '../components/VendorList'
-import { useQueryClient } from '@tanstack/react-query'
 import NewVendorForm from '../components/NewVendorForm'
 
 // GET VENDORS FUNCTION
@@ -11,33 +9,7 @@ const getVendors = async () => {
   const { data } = await axios.get('/api/v1/vendors/showAllMyVendors', {
     headers: {
       Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODA3MzQwNDcsImV4cCI6MTY4MTMzODg0N30.h_dLANw03iGcMnHXAmIrOBvKFuP1GAxd1GmVapPhc-w',
-    },
-  })
-  return data
-}
-
-// EDIT VENDOR FUNCTION
-const updateVendor = async (updatedVendor) => {
-  const { data } = await axios.put(
-    `/api/v1/vendors/${updatedVendor._id}`,
-    updatedVendor,
-    {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODA3MzQwNDcsImV4cCI6MTY4MTMzODg0N30.h_dLANw03iGcMnHXAmIrOBvKFuP1GAxd1GmVapPhc-w',
-      },
-    }
-  )
-  return data
-}
-
-// CREATE VENDOR FUNCTION
-const createVendor = async (newVendor) => {
-  const { data } = await axios.post(`/api/v1/vendors`, newVendor, {
-    headers: {
-      Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODA3MzQwNDcsImV4cCI6MTY4MTMzODg0N30.h_dLANw03iGcMnHXAmIrOBvKFuP1GAxd1GmVapPhc-w',
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQyODAyNzgsImV4cCI6MTY4NDg4NTA3OH0.cY_CbIbLnzQpQcZJSnNZvehcUH6npsR7Ito8IYVpqI8',
     },
   })
   return data
@@ -51,11 +23,9 @@ const initialVendorState = {
 }
 
 const Vendors = () => {
-  const queryClient = useQueryClient()
-
   const [filter, setFilter] = useState('')
   const [showForm, setShowForm] = useState(false)
-  const [vendorDetails, setVendorDetails] = useState(initialVendorState)
+  const [initialFormValues, setInitialFormValues] = useState(initialVendorState)
 
   // FETCH VENDOR LIST QUERY
   const vendorsQuery = useQuery({
@@ -63,56 +33,23 @@ const Vendors = () => {
     queryFn: getVendors,
   })
 
-  // UPDATE VENDOR MUTATION
-  const updateVendorMutation = useMutation({
-    mutationFn: updateVendor,
-    onSuccess: ({ vendor: updatedVendor }) => {
-      const { vendors } = queryClient.getQueryData(['vendors'])
-      queryClient.setQueryData(['vendors'], {
-        count: vendors.length,
-        vendors: vendors.map((v) =>
-          updatedVendor._id === v._id ? updatedVendor : v
-        ),
-      })
-    },
-  })
-
-  // CREATE VENDOR MUTATION
-  const createVendorMutation = useMutation({
-    mutationFn: createVendor,
-    onSuccess: ({ vendor: newVendor }) => {
-      const { vendors } = queryClient.getQueryData(['vendors'])
-      queryClient.setQueryData(['vendors'], {
-        count: vendors.length + 1,
-        vendors: [...vendors, newVendor],
-      })
-    },
-  })
-
-  // HANDLE SUBMITTING VENDOR FORM
-  const submitVendorForm = (vendorDetails) => {
-    if (vendorDetails._id) {
-      updateVendorMutation.mutate(vendorDetails)
-    } else {
-      createVendorMutation.mutate(vendorDetails)
-    }
-    setVendorDetails(initialVendorState)
-    setShowForm(false)
-  }
+  console.log(vendorsQuery.data)
 
   // RENDERING
   if (vendorsQuery.isLoading) return <h1>Loading...</h1>
   if (vendorsQuery.isError)
     return <h1>{vendorsQuery.error.response.data.msg}</h1>
 
-  // FILTER VENDORS WHEN SEARCHING
-  const filteredVendors = vendorsQuery.data.vendors.filter((vendor) =>
-    vendor.name.toLowerCase().includes(filter.toLowerCase())
+  // FILTER VENDORS WHEN SEARCHING - includes both name and website
+  const filteredVendors = vendorsQuery.data.vendors.filter(
+    (vendor) =>
+      vendor.website.toLowerCase().includes(filter.toLowerCase()) ||
+      vendor.name.toLowerCase().includes(filter.toLowerCase())
   )
 
   // SELECT VENDOR TO EDIT
   const handleVendorSelect = (vendorDetails) => {
-    setVendorDetails(vendorDetails)
+    setInitialFormValues(vendorDetails)
     setShowForm(true)
   }
 
@@ -127,35 +64,35 @@ const Vendors = () => {
             onChange={(e) => setFilter(e.target.value)}
             placeholder="Search"
           />
+
+          {/* New Vendor / Cancel button */}
           <button
             className="btn btn-secondary ml-2"
             onClick={() => {
-              setVendorDetails(initialVendorState)
+              setInitialFormValues(initialVendorState)
               setShowForm((prev) => !prev)
             }}
           >
             {showForm ? 'Cancel' : 'New Vendor'}
           </button>
         </div>
+
+        {/* Vendor records count */}
         <div className="badge badge-lg badge-accent mr-2">
           {vendorsQuery.data.count} vendor records
         </div>
       </div>
-      {/* EDIT VENDOR FORM */}
-      {/* <NewVendorForm
-        vendorDetails={vendorDetails}
-        setShowForm={setShowForm}
-        setVendorDetails={setVendorDetails}
-        submitVendorForm={submitVendorForm}
-      /> */}
+
+      {/* Vendor Form */}
       {showForm && (
         <NewVendorForm
-          vendorDetails={vendorDetails}
+          initialFormValues={initialFormValues}
+          setInitialFormValues={setInitialFormValues}
           setShowForm={setShowForm}
-          setVendorDetails={setVendorDetails}
-          submitVendorForm={submitVendorForm}
         />
       )}
+
+      {/* Vendor List */}
       <VendorList
         filteredVendors={filteredVendors}
         handleVendorSelect={handleVendorSelect}
