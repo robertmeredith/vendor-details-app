@@ -23,8 +23,8 @@ function handleValidationError() {
 const register = [
   // check('username', 'Username is required').not().isEmpty(),
   check('email', 'Please include a valid email').isEmail().normalizeEmail(),
-  check('username', 'Username must be at least 4 characters').isLength({
-    min: 4,
+  check('name', 'Name must be at least 2 characters').isLength({
+    min: 2,
   }),
   check('password', 'Password must be at least 6 characters').isLength({
     min: 6,

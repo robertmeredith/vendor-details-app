@@ -1,11 +1,10 @@
 import { Formik, Form } from 'formik'
 import CustomInput from './CustomInput'
 import { formatInstagramUsername } from '../helpers/validationHelper'
-import { vendorSchema } from '../schemas'
+import { vendorSchema } from '../validation'
 import axios from 'axios'
 import { useMutation } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
 
 // EDIT VENDOR FUNCTION
 const updateVendor = async (updatedVendor) => {

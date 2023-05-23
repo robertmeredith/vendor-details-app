@@ -1,24 +1,38 @@
 import { useState, useEffect } from 'react'
+import { Formik, Form } from 'formik'
 import axios from 'axios'
+import CustomInput from '../components/CustomInput'
+import Alert from '../components/Alert'
+import { loginSchema } from '../validation'
+
+const initialValues = {
+  email: '',
+  password: '',
+}
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [showAlert, setShowAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
 
+  // USEEFFECT - for disabling alert after 3 seconds
   useEffect(() => {
-    console.log('EMAIL', email, 'PASSWORD', password)
-  }, [email, password])
+    if (showAlert) {
+      setTimeout(() => {
+        setShowAlert(false)
+        setAlertMessage('')
+      }, 3000)
+    }
+  }, [showAlert])
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async (values, helpers) => {
     try {
-      const {data} = await axios.post('/api/v1/auth/login', {
-        email,
-        password,
-      })
-      console.log('DATA:', data)
+      const { data } = await axios.post('/api/v1/auth/login', values)
+      helpers.resetForm()
+      console.log('/Login', data)
     } catch (error) {
-      console.log('ERROR', error.response.data.msg)
+      console.log('/Login - error', error.response.data.msg)
+      setAlertMessage(`Error = ${error.response.data.msg}`)
+      setShowAlert(true)
     }
   }
 
@@ -26,7 +40,40 @@ const Login = () => {
     <div className="flex items-center justify-center">
       <div className="card w-96 bg-base-100 shadow-xl mt-60">
         <div className="card-body">
-          <form onSubmit={handleSubmit}>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            validationSchema={loginSchema}
+          >
+            {(props) => (
+              <Form>
+                {/* Email */}
+                <CustomInput
+                  labelText="Email"
+                  type="text"
+                  name="email"
+                  placeholder="email"
+                />
+                {/* Password */}
+                <CustomInput
+                  labelText="Password"
+                  type="password"
+                  name="password"
+                  placeholder="password"
+                />
+                {/* Login Button */}
+                <button
+                  type="submit"
+                  disabled={!props.dirty || props.isSubmitting}
+                  className="btn btn-success mt-4"
+                >
+                  Login
+                </button>
+              </Form>
+            )}
+          </Formik>
+          <Alert showAlert={showAlert} alertMessage={alertMessage} />
+          {/* <form onSubmit={handleSubmit}>
             <h1 className="font-bold text-center uppercase">Welcome Back!</h1>
             <p className="mt-6 text-center">Please sign in to your account</p>
             <div className="form-control w-full max-w-xs">
@@ -56,7 +103,7 @@ const Login = () => {
             >
               Sign In
             </button>
-          </form>
+          </form> */}
         </div>
       </div>
     </div>

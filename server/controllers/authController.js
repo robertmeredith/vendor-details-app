@@ -57,11 +57,11 @@ const login = async (req, res, next) => {
     throw new CustomError.Unauthenticated('Invalid Credentials')
   }
 
-  const token = createJWT({ userId: user._id, username: user.username })
+  const token = createJWT({ userId: user._id, name: user.name })
 
   res.status(200).json({
     user: {
-      username: user.username,
+      name: user.name,
       id: user.id,
     },
     token,
