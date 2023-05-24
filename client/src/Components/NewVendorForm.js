@@ -14,7 +14,7 @@ const updateVendor = async (updatedVendor) => {
     {
       headers: {
         Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQyODAyNzgsImV4cCI6MTY4NDg4NTA3OH0.cY_CbIbLnzQpQcZJSnNZvehcUH6npsR7Ito8IYVpqI8',
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQ4ODUzNzEsImV4cCI6MTY4NTQ5MDE3MX0.yIJ5hF9wnsE28vopJbL-JmYU71EZw-ClsvkoV-K9YgQ',
       },
     }
   )
@@ -26,7 +26,7 @@ const createVendor = async (newVendor) => {
   const { data } = await axios.post(`/api/v1/vendors`, newVendor, {
     headers: {
       Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQyODAyNzgsImV4cCI6MTY4NDg4NTA3OH0.cY_CbIbLnzQpQcZJSnNZvehcUH6npsR7Ito8IYVpqI8',
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQ4ODUzNzEsImV4cCI6MTY4NTQ5MDE3MX0.yIJ5hF9wnsE28vopJbL-JmYU71EZw-ClsvkoV-K9YgQ',
     },
   })
   return data
@@ -144,8 +144,8 @@ const NewVendorForm = ({
             {/* Submit button */}
             <button
               type="submit"
-              disabled={props.isSubmitting}
-              className="btn btn-success"
+              disabled={props.isSubmitting || !props.dirty}
+              className="btn btn-success mt-4"
             >
               Submit
             </button>

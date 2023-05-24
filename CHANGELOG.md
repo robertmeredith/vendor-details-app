@@ -1,9 +1,14 @@
 ## NEXT
 - [] clear vendors and add some kind of validation of email, instagram names etc
-- [] front end - have instagram input automagically parse username on leaving focus?
-- [] implement form submission mutation
+- [X] front end - have instagram input automagically parse username on leaving focus?
+- [X] implement form submission mutation
 - [] add client input to form submission
 - [] add event date to form submission
+- [] in auth controller add custom errors instead of setting status to 400 manually
+
+## 2023-05-24
+- implemented Formik on register form
+- implemented Formik on login form
 
 ## 2023-04-09
 - updated submission form to allow adding and deleting of rows

@@ -33,7 +33,7 @@ const register = async (req, res, next) => {
 
   const token = createJWT({ userId: user._id, name: user.name })
 
-  res.status(200).json({
+  res.status(StatusCodes.OK).json({
     user: {
       name: user.name,
     },
@@ -59,7 +59,7 @@ const login = async (req, res, next) => {
 
   const token = createJWT({ userId: user._id, name: user.name })
 
-  res.status(200).json({
+  res.status(StatusCodes.OK).json({
     user: {
       name: user.name,
       id: user.id,

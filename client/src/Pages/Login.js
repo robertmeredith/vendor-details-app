@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Formik, Form } from 'formik'
-import axios from 'axios'
 import CustomInput from '../components/CustomInput'
 import Alert from '../components/Alert'
 import { loginSchema } from '../validation'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../reducers/authReducer'
+import { alertError } from '../reducers/alertReducer'
 
 const initialValues = {
   email: '',
@@ -11,28 +13,18 @@ const initialValues = {
 }
 
 const Login = () => {
-  const [showAlert, setShowAlert] = useState(false)
-  const [alertMessage, setAlertMessage] = useState('')
+  const dispatch = useDispatch()
+  const alert = useSelector((state) => state.alert)
 
-  // USEEFFECT - for disabling alert after 3 seconds
-  useEffect(() => {
-    if (showAlert) {
-      setTimeout(() => {
-        setShowAlert(false)
-        setAlertMessage('')
-      }, 3000)
-    }
-  }, [showAlert])
+  console.log('ALERT', alert)
 
+  // Handle Login form submit
   const handleSubmit = async (values, helpers) => {
     try {
-      const { data } = await axios.post('/api/v1/auth/login', values)
+      dispatch(login(values))
       helpers.resetForm()
-      console.log('/Login', data)
     } catch (error) {
-      console.log('/Login - error', error.response.data.msg)
-      setAlertMessage(`Error = ${error.response.data.msg}`)
-      setShowAlert(true)
+      dispatch(alertError(`Error = ${error.response.data.msg}`))
     }
   }
 
@@ -40,6 +32,7 @@ const Login = () => {
     <div className="flex items-center justify-center">
       <div className="card w-96 bg-base-100 shadow-xl mt-60">
         <div className="card-body">
+          <h2>Login</h2>
           <Formik
             initialValues={initialValues}
             onSubmit={handleSubmit}
@@ -72,38 +65,7 @@ const Login = () => {
               </Form>
             )}
           </Formik>
-          <Alert showAlert={showAlert} alertMessage={alertMessage} />
-          {/* <form onSubmit={handleSubmit}>
-            <h1 className="font-bold text-center uppercase">Welcome Back!</h1>
-            <p className="mt-6 text-center">Please sign in to your account</p>
-            <div className="form-control w-full max-w-xs">
-              <input
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email address"
-                type="text"
-                name="email"
-                className="input input-bordered input-accent w-full max-w-xs mt-6"
-                value={email}
-              />
-            </div>
-            <div className="form-control w-full max-w-xs">
-              <input
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                type="password"
-                name="password"
-                className="input input-bordered input-accent w-full max-w-xs mt-6"
-                value={password}
-              />
-            </div>
-
-            <button
-              className="btn btn-accent w-full mt-8 uppercase"
-              type="submit"
-            >
-              Sign In
-            </button>
-          </form> */}
+          <Alert alert={alert} />
         </div>
       </div>
     </div>

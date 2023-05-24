@@ -1,10 +1,6 @@
-const Alert = ({ showAlert, alertMessage }) => {
-  return (
-    <div
-      className={`alert alert-success shadow-lg mt-6 ${
-        showAlert ? 'visible' : 'invisible'
-      }`}
-    >
+const Alert = ({ alert }) => {
+  return !alert.message ? null : (
+    <div className={`alert alert-${alert.status} shadow-lg mt-6`}>
       <div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -19,7 +15,7 @@ const Alert = ({ showAlert, alertMessage }) => {
             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <span>{alertMessage}</span>
+        <span>{alert.message}</span>
       </div>
     </div>
   )

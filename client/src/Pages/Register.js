@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import Alert from '../components/Alert'
 import CustomInput from '../components/CustomInput'
 import { registrationSchema } from '../validation'
+import { useDispatch, useSelector } from 'react-redux'
+import { register } from '../reducers/authReducer'
 
 const initialValues = {
   name: '',
@@ -13,6 +15,11 @@ const initialValues = {
 }
 
 const Register = () => {
+  const dispatch = useDispatch()
+  const { user, isLoading, isSuccess, message } = useSelector(
+    (state) => state.auth
+  )
+
   const [showAlert, setShowAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
 
@@ -29,11 +36,9 @@ const Register = () => {
   // HANDLE SUBMIT
   const handleSubmit = async (values, helpers) => {
     try {
-      const response = await axios.post(`/api/v1/auth/register`, values)
+      dispatch(register(values))
       helpers.resetForm()
-      console.log('/RegisterForm', response)
     } catch (error) {
-      console.log('/RegisterForm - error', error.response.data.msg)
       setAlertMessage(error.response.data.msg)
       setShowAlert(true)
     }
@@ -43,6 +48,7 @@ const Register = () => {
     <div className="flex items-center justify-center">
       <div className="card w-96 bg-base-100 shadow-xl mt-60">
         <div className="card-body">
+          <h1>Register</h1>
           <Formik
             initialValues={initialValues}
             validationSchema={registrationSchema}
