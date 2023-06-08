@@ -60,7 +60,7 @@ const login = async (req, res, next) => {
   const token = createJWT({ userId: user._id, name: user.name })
 
   res.status(StatusCodes.OK).json({
-    user: {
+    details: {
       name: user.name,
       id: user.id,
     },

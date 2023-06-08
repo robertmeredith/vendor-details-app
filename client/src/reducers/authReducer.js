@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import authService from '../services/authService'
+import { alertError } from './alertReducer'
+import 'react-toastify/dist/ReactToastify.css'
 
 // Register User
 export const register = createAsyncThunk(
@@ -8,7 +10,9 @@ export const register = createAsyncThunk(
     try {
       return await authService.register(user)
     } catch (error) {
+      console.log('/authReducer -', error)
       const message = error.response.data.msg
+      thunkAPI.dispatch(alertError(message, 3))
       return thunkAPI.rejectWithValue(message)
     }
   }
@@ -42,8 +46,33 @@ const initialState = {
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {},
+  reducers: {
+    reset: (state) => {
+      state.loading = false
+      state.isSuccess = false
+      state.isError =  false
+      state.message = ''
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(register.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.user = action.payload
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.isLoading = false
+        state.user = null
+        state.isError = true
+        state.message = action.payload
+      })
+  },
 })
 
+export const { reset } =
+  authSlice.actions
 export default authSlice.reducer

@@ -2,35 +2,9 @@ import { Formik, Form } from 'formik'
 import CustomInput from './CustomInput'
 import { formatInstagramUsername } from '../helpers/validationHelper'
 import { vendorSchema } from '../validation'
-import axios from 'axios'
 import { useMutation } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
-
-// EDIT VENDOR FUNCTION
-const updateVendor = async (updatedVendor) => {
-  const { data } = await axios.put(
-    `/api/v1/vendors/${updatedVendor._id}`,
-    updatedVendor,
-    {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQ4ODUzNzEsImV4cCI6MTY4NTQ5MDE3MX0.yIJ5hF9wnsE28vopJbL-JmYU71EZw-ClsvkoV-K9YgQ',
-      },
-    }
-  )
-  return data
-}
-
-// CREATE VENDOR FUNCTION
-const createVendor = async (newVendor) => {
-  const { data } = await axios.post(`/api/v1/vendors`, newVendor, {
-    headers: {
-      Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQ4ODUzNzEsImV4cCI6MTY4NTQ5MDE3MX0.yIJ5hF9wnsE28vopJbL-JmYU71EZw-ClsvkoV-K9YgQ',
-    },
-  })
-  return data
-}
+import vendorService from '../services/vendorService'
 
 const initialVendorState = {
   name: '',
@@ -38,8 +12,6 @@ const initialVendorState = {
   website: '',
   email: '',
 }
-
-// NEW VENDOR FORM
 
 const NewVendorForm = ({
   initialFormValues,
@@ -50,7 +22,7 @@ const NewVendorForm = ({
 
   // UPDATE VENDOR MUTATION
   const updateVendorMutation = useMutation({
-    mutationFn: updateVendor,
+    mutationFn: vendorService.updateVendor,
     onSuccess: ({ vendor: updatedVendor }) => {
       setShowForm(false)
       const { vendors } = queryClient.getQueryData(['vendors'])
@@ -61,12 +33,14 @@ const NewVendorForm = ({
         ),
       })
     },
-    onError: (error, vendorDetails) => setInitialFormValues(vendorDetails),
+    onError: (error, vendorDetails) => {
+      setInitialFormValues(vendorDetails)
+    },
   })
 
   // CREATE VENDOR MUTATION
   const createVendorMutation = useMutation({
-    mutationFn: createVendor,
+    mutationFn: vendorService.createVendor,
     onSuccess: ({ vendor: newVendor }) => {
       setShowForm(false)
       const { vendors } = queryClient.getQueryData(['vendors'])
@@ -121,7 +95,9 @@ const NewVendorForm = ({
                 // call the built-in handleBlur
                 props.handleBlur(event)
                 // format the instagram handle
-                const formatted = formatInstagramUsername(props.values['instagram'])
+                const formatted = formatInstagramUsername(
+                  props.values['instagram']
+                )
                 // set the formatted value
                 props.setFieldValue('instagram', formatted)
               }}

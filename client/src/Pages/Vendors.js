@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { VendorList } from '../components/VendorList'
 import NewVendorForm from '../components/NewVendorForm'
-import { getAllVendors } from '../helpers/queryFunctions'
-
+import useVendors from '../hooks/useVendors'
 
 const initialVendorState = {
   name: '',
@@ -17,19 +15,14 @@ const Vendors = () => {
   const [showForm, setShowForm] = useState(false)
   const [initialFormValues, setInitialFormValues] = useState(initialVendorState)
 
-  // FETCH VENDOR LIST QUERY
-  const vendorsQuery = useQuery({
-    queryKey: ['vendors'],
-    queryFn: getAllVendors,
-  })
+  const { vendorsData, isLoading, isError, error } = useVendors()
 
   // RENDERING
-  if (vendorsQuery.isLoading) return <h1>Loading...</h1>
-  if (vendorsQuery.isError)
-    return <h1>{vendorsQuery.error.response.data.msg}</h1>
+  if (isLoading) return <h1>Loading...</h1>
+  if (isError) return <h1>{error.response.data.msg}</h1>
 
   // FILTER VENDORS WHEN SEARCHING - includes both name and website
-  const filteredVendors = vendorsQuery.data.vendors.filter(
+  const filteredVendors = vendorsData.vendors.filter(
     (vendor) =>
       vendor.website.toLowerCase().includes(filter.toLowerCase()) ||
       vendor.name.toLowerCase().includes(filter.toLowerCase())
@@ -67,7 +60,7 @@ const Vendors = () => {
 
         {/* Vendor records count */}
         <div className="badge badge-lg badge-accent mr-2">
-          {vendorsQuery.data.count} vendor records
+          {vendorsData.count} vendor records
         </div>
       </div>
 

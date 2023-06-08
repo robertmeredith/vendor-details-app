@@ -13,6 +13,7 @@ const authMiddleware = async (req, res, next) => {
   try {
     const validToken = isTokenValid(authorization.split(' ')[1])
     const user = await User.findById(validToken.userId).select('-password')
+    console.log('/authMiddleware', user);
     if (!user) {
       throw new CustomError.NotFound('Authentication Invalid')
     }

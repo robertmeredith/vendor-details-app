@@ -5,7 +5,13 @@ import Alert from '../components/Alert'
 import { loginSchema } from '../validation'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../reducers/authReducer'
-import { alertError } from '../reducers/alertReducer'
+import { alertError, alertWarning } from '../reducers/alertReducer'
+import { useMutation } from '@tanstack/react-query'
+import authService from '../services/authService'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { alertSuccess } from '../reducers/alertReducer'
+import localStorageHelper from '../helpers/localStorageHelper'
 
 const initialValues = {
   email: '',
@@ -14,18 +20,35 @@ const initialValues = {
 
 const Login = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const alert = useSelector((state) => state.alert)
 
-  console.log('ALERT', alert)
+  // Login mutation
+  const { mutate, isLoading } = useMutation({
+    mutationFn: authService.login,
+    onSuccess: (userData) => {
+      console.log('USER', userData)
+      if (userData) {
+        localStorageHelper.setStoredUser(userData)
+        navigate('/')
+        toast.success('Logged in!')
+      }
+    },
+    onError: (error) => {
+      dispatch(alertWarning(error.response.data.msg, 5))
+    },
+  })
 
   // Handle Login form submit
   const handleSubmit = async (values, helpers) => {
-    try {
-      dispatch(login(values))
-      helpers.resetForm()
-    } catch (error) {
-      dispatch(alertError(`Error = ${error.response.data.msg}`))
-    }
+    // try {
+    //   dispatch(login(values))
+    //   helpers.resetForm()
+    // } catch (error) {
+    //   dispatch(alertError(`Error = ${error.response.data.msg}`))
+    // }
+    mutate(values)
   }
 
   return (
@@ -36,7 +59,7 @@ const Login = () => {
           <Formik
             initialValues={initialValues}
             onSubmit={handleSubmit}
-            validationSchema={loginSchema}
+            // validationSchema={loginSchema}
           >
             {(props) => (
               <Form>

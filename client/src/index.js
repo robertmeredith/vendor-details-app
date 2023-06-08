@@ -6,9 +6,9 @@ import { BrowserRouter } from 'react-router-dom'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { Provider } from 'react-redux'
 import store from './store'
+import queryClient from './react-query/queryClient.js'
 
-// Create a query client
-const queryClient = new QueryClient()
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(

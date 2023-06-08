@@ -1,11 +1,13 @@
 import { Formik, Form } from 'formik'
-import axios from 'axios'
-import { useState, useEffect } from 'react'
 import Alert from '../components/Alert'
 import CustomInput from '../components/CustomInput'
 import { registrationSchema } from '../validation'
+import { ToastContainer, toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+import authService from '../services/authService'
+import { useMutation } from '@tanstack/react-query'
+import { alertSuccess } from '../reducers/alertReducer'
 import { useDispatch, useSelector } from 'react-redux'
-import { register } from '../reducers/authReducer'
 
 const initialValues = {
   name: '',
@@ -15,33 +17,30 @@ const initialValues = {
 }
 
 const Register = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { user, isLoading, isSuccess, message } = useSelector(
-    (state) => state.auth
-  )
 
-  const [showAlert, setShowAlert] = useState(false)
-  const [alertMessage, setAlertMessage] = useState('')
+  // Get Alert state
+  const alert = useSelector((state) => state.alert)
 
-  // USEEFFECT - for disabling alert after 3 seconds
-  useEffect(() => {
-    if (showAlert) {
-      setTimeout(() => {
-        setShowAlert(false)
-        setAlertMessage('')
-      }, 3000)
-    }
-  }, [showAlert])
+  // Create user mutation
+  const registerUserMutation = useMutation({
+    mutationFn: authService.register,
+    onSuccess: (data) => {
+      console.log('USER', data)
+      if (data) {
+        navigate('/')
+      }
+      toast.success('You successfully registered!')
+    },
+    onError: (error) => {
+      dispatch(alertSuccess(error.response.data.msg, 5))
+    },
+  })
 
   // HANDLE SUBMIT
-  const handleSubmit = async (values, helpers) => {
-    try {
-      dispatch(register(values))
-      helpers.resetForm()
-    } catch (error) {
-      setAlertMessage(error.response.data.msg)
-      setShowAlert(true)
-    }
+  const handleSubmit = async (values) => {
+    registerUserMutation.mutate(values)
   }
 
   return (
@@ -51,7 +50,7 @@ const Register = () => {
           <h1>Register</h1>
           <Formik
             initialValues={initialValues}
-            validationSchema={registrationSchema}
+            // validationSchema={registrationSchema}
             onSubmit={handleSubmit}
           >
             {(props) => (
@@ -96,7 +95,7 @@ const Register = () => {
             )}
           </Formik>
           {/* ALERT */}
-          <Alert showAlert={showAlert} alertMessage={alertMessage} />
+          <Alert alert={alert} />
         </div>
       </div>
     </div>

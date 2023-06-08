@@ -5,6 +5,7 @@
 - [] add client input to form submission
 - [] add event date to form submission
 - [] in auth controller add custom errors instead of setting status to 400 manually
+- [] add pre-fetching to vendors and submissions
 
 ## 2023-05-24
 - implemented Formik on register form

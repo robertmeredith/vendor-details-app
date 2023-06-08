@@ -18,11 +18,14 @@ const getVendors = async (req, res) => {
 const getAllVendors = async (req, res, next) => {
   const { user } = req.query
 
+  // TODO: Is this a valid route? Split in to two?
   // if no user query string supplied return all vendors
   if (!user) {
     const vendors = await Vendor.find({})
     return res.status(200).json({ count: vendors.length, vendors })
   }
+
+  // TODO: What is the below??
 
   if (mongoose.isValidObjectId(user)) {
     const vendors = await Vendor.find({ user }).populate('User')
@@ -35,6 +38,8 @@ const getAllVendors = async (req, res, next) => {
     next(new Error('Not a valid user id'))
   }
 }
+
+
 
 // CREATE VENDOR
 const createVendor = async (req, res, next) => {

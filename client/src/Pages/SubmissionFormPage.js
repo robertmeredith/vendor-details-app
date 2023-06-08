@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { InputGroup } from '../components/InputGroup'
 import { v4 as uuid } from 'uuid'
-import { fetchVendors } from '../helpers/queryFunctions'
+import vendorService from '../services/vendorService'
 
 const defaultVendorTypes = [
   'photographer',
@@ -46,7 +46,7 @@ const SubmissionFormPage = () => {
   // GET USER VENDORS
   const vendorsQuery = useQuery({
     queryKey: ['vendors', userId],
-    queryFn: () => fetchVendors(userId),
+    queryFn: () => vendorService.fetchVendors(userId),
   })
 
   // Show loading state

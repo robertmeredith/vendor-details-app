@@ -3,29 +3,22 @@ import axios from 'axios'
 import SubmissionListItem from '../components/SubmissionListItem'
 import { useQuery } from '@tanstack/react-query'
 import Loading from '../components/Loading'
-
-const fetchAllUserSubmissions = async () => {
-  // NEEDS CHANGING TO USER SUBMISSIONS - CURRENTLY FETCHING ALL
-  const { data } = await axios.get('/api/v1/submissions')
-  return data
-}
+import useSubmissions from '../hooks/useSubmissions'
 
 const Submissions = () => {
-  const userSubmissionsQuery = useQuery(
-    ['submissions'],
-    fetchAllUserSubmissions
-  )
+  const { data, isLoading, isError } = useSubmissions()
 
-  if (userSubmissionsQuery.isLoading) return <Loading />
-  if (userSubmissionsQuery.isError) return <p>Error</p>
-
-  console.log('SUBMISSIONS PAGE - submissions', userSubmissionsQuery.data)
+  if (isLoading) return <Loading />
+  if (isError) return <p>Error</p>
 
   return (
     <div>
       <h1 className="text-3xl text-center">Submissions Page</h1>
-      {userSubmissionsQuery.data.submissions.map((submission) => {
-        return <SubmissionListItem key={submission._id} submission={submission} />
+      <p>{data.count}</p>
+      {data.submissions.map((submission) => {
+        return (
+          <SubmissionListItem key={submission._id} submission={submission} />
+        )
       })}
     </div>
   )
