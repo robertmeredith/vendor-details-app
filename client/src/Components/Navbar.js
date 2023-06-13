@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
+import useAuth from '../hooks/useAuth'
 
 const Navbar = ({ title }) => {
+  const { logout } = useAuth()
+
   return (
     <div className="navbar bg-base-100 m-auto">
       <div className="navbar-start">
@@ -42,6 +45,9 @@ const Navbar = ({ title }) => {
             </li>
             <li>
               <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <button onClick={logout}>Logout</button>
             </li>
           </ul>
         </div>

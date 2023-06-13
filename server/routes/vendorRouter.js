@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 // import Auth Middleware
-const authMiddleware = require('../middleware/authMiddleware')
+const { authMiddleware } = require('../middleware/authMiddleware')
 
 // import User model
 const Vendor = require('../models/vendorModel')
@@ -19,10 +19,7 @@ const {
 } = require('../controllers/vendorController')
 
 // Get all vendors / create vendor
-router
-  .route('/')
-  .get(getVendors)
-  .post(authMiddleware, createVendor)
+router.route('/').get(getVendors).post(authMiddleware, createVendor)
 
 // GET - all user vendors
 router.get('/showAllMyVendors', authMiddleware, getCurrentUserVendors)

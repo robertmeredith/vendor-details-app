@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { alertSuccess } from '../reducers/alertReducer'
 import localStorageHelper from '../helpers/localStorageHelper'
+import useAuth from '../hooks/useAuth'
+import useUser from '../hooks/useUser'
 
 const initialValues = {
   email: '',
@@ -19,36 +21,29 @@ const initialValues = {
 }
 
 const Login = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const { loginUser } = useAuth()
 
   const alert = useSelector((state) => state.alert)
 
   // Login mutation
-  const { mutate, isLoading } = useMutation({
-    mutationFn: authService.login,
-    onSuccess: (userData) => {
-      console.log('USER', userData)
-      if (userData) {
-        localStorageHelper.setStoredUser(userData)
-        navigate('/')
-        toast.success('Logged in!')
-      }
-    },
-    onError: (error) => {
-      dispatch(alertWarning(error.response.data.msg, 5))
-    },
-  })
+  // const { mutate, isLoading } = useMutation({
+  //   mutationFn: authService.login,
+  //   onSuccess: (userData) => {
+  //     console.log('USER', userData)
+  //     if (userData) {
+  //       // localStorageHelper.setStoredUser(userData)
+  //       navigate('/')
+  //       toast.success('Logged in!')
+  //     }
+  //   },
+  //   onError: (error) => {
+  //     dispatch(alertWarning(error.response.data.msg, 5))
+  //   },
+  // })
 
   // Handle Login form submit
-  const handleSubmit = async (values, helpers) => {
-    // try {
-    //   dispatch(login(values))
-    //   helpers.resetForm()
-    // } catch (error) {
-    //   dispatch(alertError(`Error = ${error.response.data.msg}`))
-    // }
-    mutate(values)
+  const handleSubmit = async (values) => {
+    loginUser(values)
   }
 
   return (

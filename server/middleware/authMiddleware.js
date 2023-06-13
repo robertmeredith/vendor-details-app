@@ -13,7 +13,7 @@ const authMiddleware = async (req, res, next) => {
   try {
     const validToken = isTokenValid(authorization.split(' ')[1])
     const user = await User.findById(validToken.userId).select('-password')
-    console.log('/authMiddleware', user);
+    console.log('/authMiddleware', user)
     if (!user) {
       throw new CustomError.NotFound('Authentication Invalid')
     }
@@ -25,4 +25,17 @@ const authMiddleware = async (req, res, next) => {
   next()
 }
 
-module.exports = authMiddleware
+const adminMiddleware = async (req, res, next) => {
+  console.log('-----ADMIN AUTH----')
+  const { user } = req
+  console.log('USER', user)
+
+  if (user.role !== 'admin') {
+    throw new CustomError.Unauthenticated(
+      'Admin privileges required to access this route'
+    )
+  }
+  next()
+}
+
+module.exports = { authMiddleware, adminMiddleware }

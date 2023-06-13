@@ -1,6 +1,13 @@
 import axios from 'axios'
 const API_URL_VENDORS = '/api/v1/vendors'
 
+const fakeData = {
+  name: 'ro',
+  instagram: '@robbbie',
+  email: 'rob@hotmail.com',
+  website: 'https://www.robbie.com',
+}
+
 // Fetch Vendors - used for fetching vendors for client form
 const fetchVendors = async (id) => {
   const { data } = await axios.get(`${API_URL_VENDORS}?userId=${id}`)
@@ -19,25 +26,23 @@ const getAllVendors = async (user) => {
 }
 
 // Create New Vendor
-const createVendor = async (newVendor) => {
-  const { data } = await axios.post(`/api/v1/vendors`, newVendor, {
+const createVendor = async ({ vendorData, user }) => {
+  const { data } = await axios.post(`/api/v1/vendors`, fakeData, {
     headers: {
-      Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQ4ODUzNzEsImV4cCI6MTY4NTQ5MDE3MX0.yIJ5hF9wnsE28vopJbL-JmYU71EZw-ClsvkoV-K9YgQ',
+      Authorization: `Bearer ${user.token}`,
     },
   })
   return data
 }
 
 // Edit Vendor
-const updateVendor = async (updatedVendor) => {
+const updateVendor = async ({ vendorData, user }) => {
   const { data } = await axios.put(
-    `/api/v1/vendors/${updatedVendor._id}`,
-    updatedVendor,
+    `/api/v1/vendors/${vendorData._id}`,
+    vendorData,
     {
       headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmYzRjNmQ2OWRiZWIzYjQzYzYyZTgiLCJpYXQiOjE2ODQ4ODUzNzEsImV4cCI6MTY4NTQ5MDE3MX0.yIJ5hF9wnsE28vopJbL-JmYU71EZw-ClsvkoV-K9YgQ',
+        Authorization: `Bearer ${user.token}`,
       },
     }
   )

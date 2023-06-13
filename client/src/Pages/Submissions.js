@@ -7,9 +7,10 @@ import useSubmissions from '../hooks/useSubmissions'
 
 const Submissions = () => {
   const { data, isLoading, isError } = useSubmissions()
+  console.log('DATA', data)
 
   if (isLoading) return <Loading />
-  if (isError) return <p>Error</p>
+  if (isError) return <p>There was an error fetching the records</p>
 
   return (
     <div>

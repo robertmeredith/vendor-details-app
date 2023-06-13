@@ -1,9 +1,10 @@
 import axios from 'axios'
 import localStorageHelper from '../helpers/localStorageHelper'
 import { useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
-async function getUser(user) {
+// useUser Function
+const getUser = async (user) => {
   if (!user) return null
   const response = await axios.get(`/api/v1/users/${user.user.id}`, {
     headers: {
@@ -15,9 +16,10 @@ async function getUser(user) {
 }
 
 export default function useUser() {
+  // useUser query
   const { data: user } = useQuery({
     queryKey: ['user'],
-    queryFn: async () => getUser(user),
+    queryFn: () => getUser(user),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -27,7 +29,9 @@ export default function useUser() {
     },
   })
 
+  // useEffect to update local storage when user query cache changes
   useEffect(() => {
+    console.log('useEffect running', user)
     if (!user) {
       localStorageHelper.clearStoredUser()
     } else {
@@ -35,7 +39,5 @@ export default function useUser() {
     }
   }, [user])
 
-  return {
-    user: user ?? null,
-  }
+  return user ?? null
 }

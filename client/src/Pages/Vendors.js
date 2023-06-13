@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { VendorList } from '../components/VendorList'
 import NewVendorForm from '../components/NewVendorForm'
 import useVendors from '../hooks/useVendors'
+import { useNavigate } from 'react-router-dom'
 
 const initialVendorState = {
   name: '',
@@ -16,6 +17,7 @@ const Vendors = () => {
   const [initialFormValues, setInitialFormValues] = useState(initialVendorState)
 
   const { vendorsData, isLoading, isError, error } = useVendors()
+  const navigate = useNavigate()
 
   // RENDERING
   if (isLoading) return <h1>Loading...</h1>
@@ -50,8 +52,9 @@ const Vendors = () => {
           <button
             className="btn btn-secondary ml-2"
             onClick={() => {
-              setInitialFormValues(initialVendorState)
-              setShowForm((prev) => !prev)
+              // setInitialFormValues(initialVendorState)
+              // setShowForm((prev) => !prev)
+              navigate('/vendors/new')
             }}
           >
             {showForm ? 'Cancel' : 'New Vendor'}

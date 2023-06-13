@@ -1,18 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
-import useUser from '../hooks/userUser'
+import useUser from '../hooks/useUser'
 import axios from 'axios'
 import localStorageHelper from '../helpers/localStorageHelper'
 
 // fetch all submissions - no auth validation - returns all submissions in system
-const fetchAllUserSubmissions = async () => {
-  // NEEDS CHANGING TO USER SUBMISSIONS - CURRENTLY FETCHING ALL
-  const { data } = await axios.get('/api/v1/submissions')
+const fetchAllUserSubmissions = async (user) => {
+  const { data } = await axios.get('/api/v1/submissions', {
+    headers: {
+      Authorization: `Bearer ${user?.token}`,
+    },
+  })
   return data
 }
 
 // fetch submissions for current logged in user
-const getCurrentUserSubmissions = async () => {
-  const user = localStorageHelper.getStoredUser()
+const getCurrentUserSubmissions = async (user) => {
   const { data } = await axios.get('/api/v1/submissions/showAllMySubmissions', {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -22,13 +24,13 @@ const getCurrentUserSubmissions = async () => {
 }
 
 const useSubmissions = () => {
-  // get current logged in user
-  const { user } = useUser()
+  const user = useUser()
+  const fallback = { count: 0, submissions: [] }
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['submissions'],
-    queryFn: (user) => getCurrentUserSubmissions(),
-    initialData: { count: 99, submissions: [] },
+    queryFn: () => fetchAllUserSubmissions(user),
+    placeholderData: fallback,
   })
 
   return { data, isLoading, isError }
