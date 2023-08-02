@@ -1,4 +1,4 @@
-import Navbar from './components/Navbar'
+import Navbar from '../Navbar'
 import Home from './pages/Home.js'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -20,8 +20,6 @@ import Auth from './components/Auth'
 import { useEffect } from 'react'
 import { toastSettings } from './helpers/toastSettingsHelper'
 
-
-
 function App() {
   const user = useUser()
   const navigate = useNavigate()
@@ -38,7 +36,7 @@ function App() {
       <div className="min-h-screen min-w-[24rem]">
         {/* <div className="container m-auto min-w-[35rem]"> */}
         <Navbar user={user} />
-        <ToastContainer {...toastSettings}/>
+        <ToastContainer {...toastSettings} />
         <Routes>
           <Route path="/" user={user} element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -84,7 +82,7 @@ function App() {
               </Auth>
             }
           />
-          <Route path="/form" element={<SubmissionFormPage />}/>
+          <Route path="/form" element={<SubmissionFormPage />} />
           <Route path="/:userId/form" element={<ClientSubmissionFormPage />} />
           <Route
             path="/settings"
