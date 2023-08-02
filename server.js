@@ -3,7 +3,7 @@ require('dotenv').config()
 const PORT = process.env.PORT || 5001
 const MONGO_URI = process.env.MONGO_URI
 
-const connectDB = require('./db.js')
+const connectDB = require('./server/db.js')
 
 // Initialise express
 const express = require('express')
@@ -25,21 +25,20 @@ const rateLimiter = require('express-rate-limit')
 const apiLimiter = rateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10,
-  message: 'Too many requests from this IP, please try again in 15 minutes'
+  message: 'Too many requests from this IP, please try again in 15 minutes',
 })
 
-
 // Import Routes
-const authRouter = require('./routes/authRouter')
-const userRouter = require('./routes/userRouter')
-const submissionRouter = require('./routes/submissionRouter')
-const vendorRouter = require('./routes/vendorRouter')
-const userSettingsRouter = require('./routes/userSettingsRouter')
+const authRouter = require('./server/routes/authRouter.js')
+const userRouter = require('./server/routes/userRouter.js')
+const submissionRouter = require('./server/routes/submissionRouter.js')
+const vendorRouter = require('./server/routes/vendorRouter.js')
+const userSettingsRouter = require('./server/routes/userSettingsRouter.js')
 
 // Import Middleware
 const morgan = require('morgan')
-const errorHandlerMiddleware = require('./middleware/errorHandlerMiddleware')
-const notFoundMiddleware = require('./middleware/notFoundMiddleware')
+const errorHandlerMiddleware = require('./server/middleware/errorHandlerMiddleware.js')
+const notFoundMiddleware = require('./server/middleware/notFoundMiddleware.js')
 
 // MIDDLEWARE
 app.use(morgan('tiny'))
@@ -51,17 +50,16 @@ app.use(helmet())
 app.use(xss())
 app.use(mongoSanitize())
 
-
 // if (process.env.NODE_ENV === 'production') {
 //   // Set static folder
 //   app.use(express.static('client/build'))
 // }
 
-
 // DEPLOYMENT
-const __dirName = dirname(require.main.filename)
+// const __dirName = dirname(require.main.filename)
 // DEPLOYMENT - location of build file
-app.use(express.static(path.resolve(__dirName, '../client/build')))
+// app.use(express.static(path.resolve(__dirName, '../client/build')))
+
 
 app.get('/api/v1', (req, res) => {
   res.status(205).json({ msg: 'Welcome' })
@@ -74,8 +72,9 @@ app.use('/api/v1/vendors', vendorRouter)
 app.use('/api/v1/settings', userSettingsRouter)
 
 // DEPLOYMENT - after trying above routes, serve index.html file
+app.use(express.static('client/build'))
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './client/build', 'index.html'))
+  res.sendFile(path.resolve(__dirname, 'client/build', 'index.html'))
 })
 
 app.use(notFoundMiddleware)
