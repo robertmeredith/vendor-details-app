@@ -1,4 +1,4 @@
-import Navbar from '../Navbar'
+import Navbar from './Navbar'
 import Home from './pages/Home.js'
 import Login from './pages/Login'
 import Register from './pages/Register'
