@@ -1,4 +1,4 @@
-import AddVendorForm from '../components/AddVendorForm'
+import AddVendorForm from '../Components/AddVendorForm'
 import SectionHeading from '../components/SectionHeading'
 
 const text = 'Enter vendor details below to add the vendor to your database'
