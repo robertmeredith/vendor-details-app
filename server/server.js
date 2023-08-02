@@ -8,8 +8,27 @@ const connectDB = require('./db.js')
 // Initialise express
 const express = require('express')
 const app = express()
-// Enables default handling of async errors without try catch
+// Enables default handling of async errors without try catch - can just throw
 require('express-async-errors')
+
+// FOR DEPLOYMENT to Heroku
+const { dirname } = require('path')
+const { fileURLToPath } = require('url')
+const path = require('path')
+
+// FOR DEPLOYMENT - security
+const helmet = require('helmet')
+const xss = require('xss-clean')
+const mongoSanitize = require('express-mongo-sanitize')
+
+// FOR DEPLOYMENT - rate limit
+const rateLimiter = require('express-rate-limit')
+const apiLimiter = rateLimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: 'Too many requests from this IP, please try again in 15 minutes'
+})
+
 
 // Import Routes
 const authRouter = require('./routes/authRouter')
@@ -28,15 +47,30 @@ app.use(morgan('tiny'))
 // Parse JSON bodies
 app.use(express.json())
 
+// DEPLOYMENT  - security
+app.use(helmet())
+app.use(xss())
+app.use(mongoSanitize())
+
+// DEPLOYMENT
+const __dirName = dirname(require.main.filename)
+// DEPLOYMENT - location of build file
+app.use(express.static(path.resolve(__dirName, '../client/build')))
+
 app.get('/api/v1', (req, res) => {
   res.status(205).json({ msg: 'Welcome' })
 })
 
-app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/auth', apiLimiter, authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/submissions', submissionRouter)
 app.use('/api/v1/vendors', vendorRouter)
 app.use('/api/v1/settings', userSettingsRouter)
+
+// DEPLOYMENT - after trying above routes, serve index.html file
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'))
+})
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)

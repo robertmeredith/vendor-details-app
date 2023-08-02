@@ -6,12 +6,14 @@ import SingleSubmissionTable from '../components/SingleSubmissionTable'
 import { useState } from 'react'
 import { Switch } from '@headlessui/react'
 import { toast } from 'react-toastify'
+import dayjs from 'dayjs'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 const SingleSubmissionPage = () => {
+  // Toggle including vendor type in copy for Instagram
   const [includeVendorType, setIncludeVendorType] = useState(false)
   const { submissionId } = useParams()
   const { data, isLoading, isError, error } = useGetSubmission(submissionId)
@@ -39,9 +41,8 @@ const SingleSubmissionPage = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4 sm:mt-8 mb-14">
-      {/* We've used 3xl here, but feel free to try other max-widths based on your needs */}
       <SectionHeading
-        text={'ENTER TEXT HERE'}
+        text={dayjs(data.eventDate).format('DD MMMM YYYY')}
         section={`${data.client} & ${data.partner}`}
       />
       <div className="mx-auto max-w-7xl">
