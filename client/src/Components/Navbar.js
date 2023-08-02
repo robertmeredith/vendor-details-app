@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
-import useAuth from './hooks/useAuth'
-import NavbarLink from './components/NavbarLink'
+import useAuth from '../hooks/useAuth'
+import NavbarLink from './NavbarLink'
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import NavbarHamburgerLink from './components/NavbarHamburgerLink'
+import NavbarHamburgerLink from './NavbarHamburgerLink'
 
 const navigation = [
   { name: 'Submissions', path: '/submissions' },

@@ -13,7 +13,6 @@ require('express-async-errors')
 
 // FOR DEPLOYMENT to Heroku
 const { dirname } = require('path')
-const { fileURLToPath } = require('url')
 const path = require('path')
 
 // FOR DEPLOYMENT - security
@@ -52,6 +51,13 @@ app.use(helmet())
 app.use(xss())
 app.use(mongoSanitize())
 
+
+// if (process.env.NODE_ENV === 'production') {
+//   // Set static folder
+//   app.use(express.static('client/build'))
+// }
+
+
 // DEPLOYMENT
 const __dirName = dirname(require.main.filename)
 // DEPLOYMENT - location of build file
@@ -69,7 +75,7 @@ app.use('/api/v1/settings', userSettingsRouter)
 
 // DEPLOYMENT - after trying above routes, serve index.html file
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'))
+  res.sendFile(path.resolve(__dirname, './client/build', 'index.html'))
 })
 
 app.use(notFoundMiddleware)
