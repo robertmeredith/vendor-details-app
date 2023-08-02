@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
-
+import { Form } from 'formik'
 
 export const InputGroup = ({
   defaultType,
   defaultVendorTypes,
   index,
   setFormState,
-  vendors,
+  allVendors,
   removeFormInputRow,
+  setValues,
+  values,
 }) => {
   const [vendorType, setVendorType] = useState(defaultType)
   const [vendor, setVendor] = useState({
@@ -25,7 +27,7 @@ export const InputGroup = ({
   const handleInputChange = (event) => {
     if (event.target.name === 'name' && event.target.value) {
       setFilteredVendors(
-        vendors.filter((v) =>
+        allVendors.filter((v) =>
           v.name.toLowerCase().includes(event.target.value.toLowerCase())
         )
       )
@@ -58,7 +60,7 @@ export const InputGroup = ({
         defaultValue={vendorType}
         onChange={(e) => setVendorType(e.target.value)}
       >
-        <option disabled value='select'>
+        <option disabled value="select">
           Please select
         </option>
         {defaultVendorTypes.map((type) => {
@@ -103,7 +105,10 @@ export const InputGroup = ({
           )
         })}
       </ul>
-      <button className="btn btn-xs btn-primary" onClick={() => removeFormInputRow(index)}>
+      <button
+        className="btn btn-xs btn-primary"
+        onClick={() => removeFormInputRow(index)}
+      >
         Remove
       </button>
     </div>

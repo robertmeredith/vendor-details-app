@@ -1,9 +1,10 @@
 const { StatusCodes } = require('http-status-codes')
-const mongoose = require('mongoose')
 const CustomError = require('../errors')
 
-// import User model
+// import Form Submissions model
 const Submission = require('../models/submissionModel')
+const Vendor = require('../models/vendorModel')
+const mongoose = require('mongoose')
 
 // GET ALL SUBMISSIONS
 const getAllSubmissions = async (req, res) => {
@@ -11,27 +12,81 @@ const getAllSubmissions = async (req, res) => {
     path: 'vendors',
     populate: [
       {
-        path: 'vendorID',
+        path: 'vendor',
         model: 'Vendor',
       },
     ],
   })
+  console.log('SUBMISSIONS ', submissions)
   res.status(200).json({ count: submissions.length, submissions })
 }
 
 // CREATE SUBMISSION
 const createSubmission = async (req, res) => {
-  const { user, client, vendors } = req.body
+  const { user, client, partner, email, date, vendors } = req.body
+  console.log('REQ BODY ', req.body)
 
-  // Save vendor details if not already in database
-  const updatedVendors = vendors.map((vendor) => {
-    return
+  // Remove entries from vendors array where vendor name is empty
+  const populatedVendors = vendors.filter((v) => v.vendor.name.trim() !== '')
+
+  // Create new Vendor if not already in database
+  // List of newly created vendors, so if a new vendor is added twice on the same form (e.g venue), it will only be created once
+  const newlyCreatedVendors = []
+  const finalVendorList = []
+  for (const v of populatedVendors) {
+    // If vendor has id, means already in database
+    if (v.vendor._id) {
+      finalVendorList.push({
+        vendorType: v.vendorType,
+        vendor: v.vendor._id,
+      })
+    } else {
+      let vendorAlreadyCreated = newlyCreatedVendors.find(
+        (vendor) => vendor.name === v.vendor.name.trim().toLowerCase()
+      )
+
+      // If vendor already created, use that vendor id
+      if (vendorAlreadyCreated) {
+        finalVendorList.push({
+          vendorType: v.vendorType,
+          vendor: vendorAlreadyCreated._id,
+        })
+      } else {
+        // Create new vendor and add to newlyCreatedVendors array so it can be referenced later
+        const newVendor = await Vendor.create({
+          user,
+          name: v.vendor.name.trim(),
+          instagram: v.vendor.instagram.trim(),
+          website: v.vendor.website.trim(),
+          email: v.vendor.email.trim(),
+        })
+        // Add vendor to newlyCreatedVendors array
+        newlyCreatedVendors.push({
+          name: newVendor.name.toLowerCase(),
+          _id: newVendor._id,
+        })
+        // Add vendor to finalVendorList
+        finalVendorList.push({
+          vendorType: v.vendorType,
+          vendor: newVendor._id,
+        })
+      }
+    }
+  }
+
+  // Create new submission
+  const newSubmission = new Submission({
+    user,
+    client,
+    email,
+    partner,
+    eventDate: date.startDate,
+    vendors: finalVendorList,
   })
 
-  const newSubmission = new Submission({ user, client, vendors })
-  await newSubmission.save()
+  newSubmission.save()
 
-  res.status(200).json({ newSubmission })
+  res.status(200).json(newSubmission)
 }
 
 // GET SINGLE SUBMISSION

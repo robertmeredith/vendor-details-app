@@ -1,135 +1,145 @@
 import { Formik, Form } from 'formik'
-import CustomInput from './CustomInput'
-import { formatInstagramUsername } from '../helpers/validationHelper'
+import CustomFormikInput from './CustomFormikInput'
+import InputWithAddon from './InputWithAddon'
+import InputWithInlineAddon from './InputWithInlineAddon'
+import CustomTextArea from './CustomTextArea'
+import { formatInstagramUsername, formatUrl } from '../helpers/validationHelper'
 import { vendorSchema } from '../validation'
-import { useMutation } from '@tanstack/react-query'
-import { useQueryClient } from '@tanstack/react-query'
-import vendorService from '../services/vendorService'
+import useUpdateVendor from '../hooks/useUpdateVendor'
+import useDeleteVendor from '../hooks/useDeleteVendor'
+import Alert from './Alert'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
-const initialVendorState = {
-  name: '',
-  instagram: '',
-  website: '',
-  email: '',
-}
-
-const NewVendorForm = ({
-  initialFormValues,
-  setInitialFormValues,
-  setShowForm,
-}) => {
-  const queryClient = useQueryClient()
-
-  // UPDATE VENDOR MUTATION
-  const updateVendorMutation = useMutation({
-    mutationFn: vendorService.updateVendor,
-    onSuccess: ({ vendor: updatedVendor }) => {
-      setShowForm(false)
-      const { vendors } = queryClient.getQueryData(['vendors'])
-      queryClient.setQueryData(['vendors'], {
-        count: vendors.length,
-        vendors: vendors.map((v) =>
-          updatedVendor._id === v._id ? updatedVendor : v
-        ),
-      })
-    },
-    onError: (error, vendorDetails) => {
-      setInitialFormValues(vendorDetails)
-    },
-  })
-
-  // CREATE VENDOR MUTATION
-  const createVendorMutation = useMutation({
-    mutationFn: vendorService.createVendor,
-    onSuccess: ({ vendor: newVendor }) => {
-      setShowForm(false)
-      const { vendors } = queryClient.getQueryData(['vendors'])
-      queryClient.setQueryData(['vendors'], {
-        count: vendors.length + 1,
-        vendors: [...vendors, newVendor],
-      })
-    },
-    onError: (error, vendorDetails) => setInitialFormValues(vendorDetails),
-  })
+const EditVendorForm = ({ vendorToEdit }) => {
+  const navigate = useNavigate()
+  const { mutate: updateVendor } = useUpdateVendor()
+  const { mutate: deleteVendor } = useDeleteVendor()
+  const alert = useSelector((state) => state.alert)
 
   // SUBMIT VENDOR FORM
-  const submitVendorForm = (vendorDetails) => {
-    // on backend check if user id matches record
-    if (vendorDetails._id) {
-      updateVendorMutation.mutate(vendorDetails)
-    } else {
-      createVendorMutation.mutate(vendorDetails)
-    }
+  const submitVendorForm = (values) => {
+    updateVendor(values)
+  }
+
+  // REMOVE VENDOR
+  const removeVendor = (e) => {
+    deleteVendor(vendorToEdit)
+    navigate('/vendors')
   }
 
   return (
-    <div>
-      <h1>Vendor Form</h1>
+    <>
+      {/* Form */}
       <Formik
         // enableReinitialize allows Form to update if a different vendor is seleced to edit
         enableReinitialize={true}
-        initialValues={initialFormValues}
+        initialValues={vendorToEdit}
         validationSchema={vendorSchema}
         onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            submitVendorForm(values)
-            setSubmitting(false)
-          }, 2000)
+          submitVendorForm(values)
+          setSubmitting(false)
         }}
       >
         {(props) => (
           <Form>
-            {/* Vendor Name */}
-            <CustomInput
-              labelText="Vendor name"
-              type="text"
-              name="name"
-              placeholder="name"
-            />
-            {/* Instagram */}
-            <CustomInput
-              labelText="Instagram username"
-              type="text"
-              name="instagram"
-              onBlur={(event) => {
-                // call the built-in handleBlur
-                props.handleBlur(event)
-                // format the instagram handle
-                const formatted = formatInstagramUsername(
-                  props.values['instagram']
-                )
-                // set the formatted value
-                props.setFieldValue('instagram', formatted)
-              }}
-              placeholder="instagram"
-            />
-            {/* Website */}
-            <CustomInput
-              labelText="website"
-              type="text"
-              name="website"
-              placeholder="website"
-            />
-            {/* Email */}
-            <CustomInput
-              labelText="email"
-              type="email"
-              name="email"
-              placeholder="email"
-            />
-            {/* Submit button */}
-            <button
-              type="submit"
-              disabled={props.isSubmitting || !props.dirty}
-              className="btn btn-success mt-4"
-            >
-              Submit
-            </button>
+            <div className="border p-12 pb-28 border-t-0 rounded-b-3xl">
+              <div className="mt-24">
+                {/* Start Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6 border-b border-gray-900/10 pb-12">
+                  <CustomFormikInput
+                    id="name"
+                    labelText="Vendor name"
+                    type="text"
+                    name="name"
+                    placeholder=""
+                  />
+                  {/* Instagram */}
+                  <InputWithInlineAddon
+                    addon="instagram.com/"
+                    id="instagram"
+                    labelText="Instagam"
+                    type="text"
+                    name="instagram"
+                    placeholder="username"
+                    onBlur={(event) => {
+                      // call the built-in handleBlur
+                      props.handleBlur(event)
+                      // format the instagram handle
+                      const formatted = formatInstagramUsername(
+                        props.values['instagram']
+                      )
+                      // set the formatted value
+                      props.setFieldValue('instagram', formatted)
+                    }}
+                  />
+                  {/* Website */}
+                  <InputWithInlineAddon
+                    autoComplete="off"
+                    addon="https://www."
+                    id="website"
+                    labelText="Website"
+                    type="text"
+                    name="website"
+                    onBlur={(event) => {
+                      // call the built-in handleBlur
+                      props.handleBlur(event)
+                      // format the url handle
+                      const formatted = formatUrl(props.values['website'])
+                      // set the formatted value
+                      props.setFieldValue('website', formatted)
+                    }}
+                  />
+                  {/* Email */}
+                  <CustomFormikInput
+                    id="email"
+                    labelText="Email"
+                    type="email"
+                    name="email"
+                    placeholder="you@example.com"
+                  />
+
+                  {/* Notes Text Area */}
+                  <CustomTextArea
+                    labelText="Notes"
+                    type="text"
+                    name="notes"
+                    description="Enter any useful vendor notes here, these will be visible only to you"
+                  />
+                </div>
+                {/* End Grid ^ */}
+                <div className="mt-6 flex items-center justify-end gap-x-6">
+                  <button
+                    onClick={() => navigate('/vendors')}
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={props.isSubmitting || !props.dirty}
+                    className={`rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 transition`}
+                  >
+                    Update
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => removeVendor(e)}
+                    className={`rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:opacity-50 transition`}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
           </Form>
         )}
       </Formik>
-    </div>
+      <Alert alert={alert} />
+      {/* End Form */}
+    </>
   )
 }
 
-export default NewVendorForm
+export default EditVendorForm

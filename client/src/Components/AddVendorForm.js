@@ -1,115 +1,145 @@
 import { Formik, Form } from 'formik'
-import CustomInput from './CustomInput'
-import { formatInstagramUsername } from '../helpers/validationHelper'
-import { vendorSchema } from '../validation'
-import { useQueryClient } from '@tanstack/react-query'
-import useVendors from '../hooks/useVendors'
+import CustomFormikInput from './CustomFormikInput'
 
-// const initialFormData = {
-//   name: '',
-//   instagram: '',
-//   website: '',
-//   email: '',
-// }
-const emptyFormData = {
+import InputWithInlineAddon from './InputWithInlineAddon'
+import CustomTextArea from './CustomTextArea'
+import { formatInstagramUsername, formatUrl } from '../helpers/validationHelper'
+import { vendorSchema } from '../validation'
+import useCreateVendor from '../hooks/useCreateVendor'
+import Alert from './Alert'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+
+const initialFormData = {
   name: '',
   instagram: '',
   website: '',
   email: '',
 }
 
-const initialFormData = {
-  name: 'robbie',
-  instagram: '@robbbie',
-  email: 'robbie@hotmail.com',
-  website: 'https://www.robbie.com',
-}
-
 const NewVendorForm = () => {
-  const { createVendor, updateVendor, newError } = useVendors()
+  const navigate = useNavigate()
+  const { mutate } = useCreateVendor()
+  const alert = useSelector((state) => state.alert)
 
   // SUBMIT VENDOR FORM
-  const submitVendorForm = async (vendorDetails, setValues) => {
-    // on backend check if user id matches record
-    if (vendorDetails._id) {
-      await updateVendor(vendorDetails)
-    } else {
-      await createVendor(vendorDetails)
-      console.log('NEW ERROR', newError)
-      if (newError) {
-        console.log('NOW??')
-      }
-    }
+  const submitVendorForm = (values, resetForm) => {
+    mutate(values, { onSuccess: resetForm })
   }
 
   return (
-    <div>
-      <h1>Vendor Form</h1>
+    <>
+      {/* Form */}
       <Formik
         // enableReinitialize allows Form to update if a different vendor is seleced to edit
         enableReinitialize={true}
         initialValues={initialFormData}
         validationSchema={vendorSchema}
-        onSubmit={(values, { setSubmitting, setValues }) => {
-          setTimeout(() => {
-            setValues(emptyFormData)
-            submitVendorForm(values, setValues)
-            setSubmitting(false)
-          }, 2000)
+        validateOnChange={false}
+        validateOnBlur={false}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          submitVendorForm(values, resetForm)
+          setSubmitting(false)
         }}
       >
         {(props) => (
           <Form>
-            {/* Vendor Name */}
-            <CustomInput
-              labelText="Vendor name"
-              type="text"
-              name="name"
-              placeholder="name"
-            />
-            {/* Instagram */}
-            <CustomInput
-              labelText="Instagram username"
-              type="text"
-              name="instagram"
-              onBlur={(event) => {
-                // call the built-in handleBlur
-                props.handleBlur(event)
-                // format the instagram handle
-                const formatted = formatInstagramUsername(
-                  props.values['instagram']
-                )
-                // set the formatted value
-                props.setFieldValue('instagram', formatted)
-              }}
-              placeholder="instagram"
-            />
-            {/* Website */}
-            <CustomInput
-              labelText="website"
-              type="text"
-              name="website"
-              placeholder="website"
-            />
-            {/* Email */}
-            <CustomInput
-              labelText="email"
-              type="email"
-              name="email"
-              placeholder="email"
-            />
-            {/* Submit button */}
-            <button
-              type="submit"
-              // disabled={props.isSubmitting || !props.dirty}
-              className="btn btn-success mt-4"
-            >
-              Submit
-            </button>
+            <div className="border p-12 pb-28 border-t-0 rounded-b-3xl">
+              <div className="mt-24">
+                {/* Start Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6 border-b border-gray-900/10 pb-12">
+                  <CustomFormikInput
+                    autoComplete="off"
+                    id="name"
+                    labelText="Vendor name"
+                    type="text"
+                    name="name"
+                    placeholder=""
+                  />
+                  {/* Instagram */}
+                  <InputWithInlineAddon
+                    autoComplete="off"
+                    addon="instagram.com/"
+                    id="instagram"
+                    labelText="Instagam"
+                    type="text"
+                    name="instagram"
+                    // placeholder="username"
+                    onBlur={(event) => {
+                      // call the built-in handleBlur
+                      props.handleBlur(event)
+                      // format the instagram handle
+                      const formatted = formatInstagramUsername(
+                        props.values['instagram']
+                      )
+                      // set the formatted value
+                      props.setFieldValue('instagram', formatted)
+                    }}
+                  />
+                  {/* Website */}
+                  <InputWithInlineAddon
+                    autoComplete="off"
+                    addon="https://www."
+                    id="website"
+                    labelText="Website"
+                    type="text"
+                    name="website"
+                    onBlur={(event) => {
+                      // call the built-in handleBlur
+                      props.handleBlur(event)
+                      // format the url handle
+                      const formatted = formatUrl(
+                        props.values['website']
+                      )
+                      // set the formatted value
+                      props.setFieldValue('website', formatted)
+                    }}
+                  />
+                  {/* Email */}
+                  <CustomFormikInput
+                    autoComplete="off"
+                    id="email"
+                    labelText="Email"
+                    type="email"
+                    name="email"
+                    // placeholder="you@example.com"
+                  />
+
+                  {/* Notes Text Area */}
+                  <CustomTextArea
+                    autoComplete="off"
+                    labelText="Notes"
+                    type="text"
+                    name="notes"
+                    description="Enter any useful vendor notes here, these will be visible only to you"
+                  />
+                </div>
+                {/* End Grid ^ */}
+                <div className="mt-6 flex items-center justify-end gap-x-6">
+                  <button
+                    onClick={() => navigate('/vendors')}
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={props.isSubmitting || !props.dirty}
+                    className={`rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 transition`}
+                  >
+                    Add Vendor
+                  </button>
+                </div>
+              </div>
+            </div>
           </Form>
         )}
       </Formik>
-    </div>
+      <Alert alert={alert} />
+      {/* End Form */}
+    </>
   )
 }
 

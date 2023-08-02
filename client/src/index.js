@@ -8,13 +8,16 @@ import { Provider } from 'react-redux'
 import store from './store'
 import queryClient from './react-query/queryClient.js'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import('preline')
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <App />
+        <div className="h-full border border-accent">
+          <App />
+        </div>
       </Provider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

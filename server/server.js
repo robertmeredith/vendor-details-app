@@ -16,6 +16,7 @@ const authRouter = require('./routes/authRouter')
 const userRouter = require('./routes/userRouter')
 const submissionRouter = require('./routes/submissionRouter')
 const vendorRouter = require('./routes/vendorRouter')
+const userSettingsRouter = require('./routes/userSettingsRouter')
 
 // Import Middleware
 const morgan = require('morgan')
@@ -35,6 +36,7 @@ app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/submissions', submissionRouter)
 app.use('/api/v1/vendors', vendorRouter)
+app.use('/api/v1/settings', userSettingsRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)

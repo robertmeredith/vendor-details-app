@@ -1,15 +1,16 @@
 const User = require('../models/userModel')
+const UserSettings = require('../models/userSettingsModel')
 const CustomError = require('../errors')
 const { StatusCodes } = require('http-status-codes')
 const { createJWT } = require('../utils/jwt')
 
 // REGISTER
 const register = async (req, res, next) => {
-  const { name, email, password } = req.body
+  const { email, password } = req.body
 
-  if (!name || !email || !password) {
+  if (!email || !password) {
     res.status(400)
-    throw new Error('Please provide username, email and password')
+    throw new Error('Please provide email and password')
   }
 
   // check if user exists
@@ -24,26 +25,26 @@ const register = async (req, res, next) => {
   const role = isFirstAccount ? 'admin' : 'user'
 
   const user = new User({
-    name,
     email,
     password,
     role,
   })
   await user.save()
 
-  const token = createJWT({ userId: user._id, name: user.name })
+  // create user settings
+  const userSettings = new UserSettings({ user, settings: {} })
+  await userSettings.save()
+
+  const token = createJWT({ userId: user._id })
 
   res.status(StatusCodes.OK).json({
-    user: {
-      name: user.name,
-    },
     token,
   })
 }
 
 // LOGIN
 const login = async (req, res, next) => {
-  console.log('HITTING LOGIN CONTROLLER')
+  // console.log('HITTING LOGIN CONTROLLER')
   const { email, password } = req.body
 
   const user = await User.findOne({ email })

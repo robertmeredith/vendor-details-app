@@ -1,10 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-// import User model
-const User = require('../models/userModel')
-
-const { getUser, getAllUsers } = require('../controllers/userController')
+const { getUser, getAllUsers, getUserSettings, getUserVendors } = require('../controllers/userController')
 
 // GET - all users
 router.get('/', getAllUsers)
@@ -12,6 +9,10 @@ router.get('/', getAllUsers)
 // GET - single user
 router.get('/:id', getUser)
 
+// GET - user settings
+router.get('/:id/settings', getUserSettings)
 
+// GET - user vendors
+router.get('/:id/vendors', getUserVendors)
 
 module.exports = router

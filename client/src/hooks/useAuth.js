@@ -1,10 +1,10 @@
-import useUser from './useUser'
 import authService from '../services/authService'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
-import { alertWarning } from '../reducers/alertReducer'
+import { useCallback } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 
 export default function useAuth() {
   const navigate = useNavigate()
@@ -22,7 +22,7 @@ export default function useAuth() {
       }
     },
     onError: (error) => {
-      dispatch(alertWarning(error.response.data.msg, 5))
+      toast.error(error.response.data.msg, 5)
     },
     retry: 0,
   })
@@ -34,21 +34,21 @@ export default function useAuth() {
       if (user) {
         queryClient.setQueryData(['user'], user)
         navigate('/')
-        toast.success('Registered!')
+        toast.success('Success! You are now registered!')
       }
     },
     onError: (error) => {
-      dispatch(alertWarning(error.response.data.msg, 5))
+      toast.error(error.response.data.msg, 5)
     },
     retry: 0,
   })
 
   // LOGOUT
-  const logout = () => {
-    console.log('HIT')
+  const logout = useCallback(() => {
     queryClient.setQueryData(['user'], null)
+    navigate('/login')
     toast.success('Logged out!')
-  }
+  }, [queryClient, navigate])
 
   return { loginUser, registerUser, logout }
 }

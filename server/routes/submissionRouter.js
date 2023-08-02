@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 
-// import record model
-const Submission = require('../models/submissionModel')
 
 // import middleware
 const {

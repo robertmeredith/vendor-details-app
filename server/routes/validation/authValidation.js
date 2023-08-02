@@ -21,11 +21,10 @@ function handleValidationError() {
 
 // REGISTER validation
 const register = [
-  // check('username', 'Username is required').not().isEmpty(),
   check('email', 'Please include a valid email').isEmail().normalizeEmail(),
-  check('name', 'Name must be at least 2 characters').isLength({
-    min: 2,
-  }),
+  // check('name', 'Name must be at least 2 characters').isLength({
+  //   min: 2,
+  // }),
   check('password', 'Password must be at least 6 characters').isLength({
     min: 6,
   }),

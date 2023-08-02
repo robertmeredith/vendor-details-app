@@ -25,7 +25,7 @@ router.route('/').get(getVendors).post(authMiddleware, createVendor)
 router.get('/showAllMyVendors', authMiddleware, getCurrentUserVendors)
 
 // GET SINGLE VENDOR
-router.get('/:vendorId', getSingleVendor)
+router.get('/:id', getSingleVendor)
 
 // UPDATE SINGLE VENDOR
 router.put('/:id', authMiddleware, updateVendor)

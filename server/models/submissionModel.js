@@ -10,6 +10,16 @@ const SubmissionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    email: {
+      type: String
+    },
+    partner: {
+      type: String,
+      required: true,
+    },
+    eventDate: {
+      type: String,
+    },
     vendors: [
       {
         vendorType: {

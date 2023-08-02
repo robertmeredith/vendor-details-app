@@ -1,29 +1,18 @@
-import axios from 'axios'
 import localStorageHelper from '../helpers/localStorageHelper'
 import { useEffect } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-
-// useUser Function
-const getUser = async (user) => {
-  if (!user) return null
-  const response = await axios.get(`/api/v1/users/${user.user.id}`, {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  })
-
-  return await response.data
-}
+import { useQuery } from '@tanstack/react-query'
+import userService from '../services/userService'
 
 export default function useUser() {
   // useUser query
   const { data: user } = useQuery({
     queryKey: ['user'],
-    queryFn: () => getUser(user),
+    queryFn: () => userService.getUser(user),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     initialData: localStorageHelper.getStoredUser(),
+    staleTime: 1000 * 60 * 10, // 10 minutes
     onError: () => {
       localStorageHelper.clearStoredUser()
     },
@@ -31,7 +20,8 @@ export default function useUser() {
 
   // useEffect to update local storage when user query cache changes
   useEffect(() => {
-    console.log('useEffect running', user)
+    // TODO: Is this useEffect just running because it's in a lot of rendered components - not because the user is changing
+    // console.log('USEUSER - useEffect running', user)
     if (!user) {
       localStorageHelper.clearStoredUser()
     } else {

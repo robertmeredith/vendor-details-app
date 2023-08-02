@@ -37,6 +37,12 @@ export const vendorSchema = yup.object().shape({
     .max(50, 'Too Long!')
     .required('Required'),
   instagram: yup.string().max(30, 'Too Long!'),
-  website: yup.string().url('Website must be a valid URL'),
+  website: yup.string(),
   email: yup.string().email('Invalid email'),
+})
+
+export const clientFormSchema = yup.object().shape({
+  client: yup.string().required('Required'),
+  partner: yup.string().required('Required'),
+  email: yup.string().email('Invalid email').required('Required'),
 })

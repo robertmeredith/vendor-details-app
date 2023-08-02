@@ -5,6 +5,7 @@ const User = require('../models/userModel')
 // AUTH MIDDLEWARE - takes token from auth header
 const authMiddleware = async (req, res, next) => {
   const { authorization } = req.headers
+  console.log('AUTH MIDDLEWARE', authorization);
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
     throw new CustomError.Unauthenticated('Authentication Invalid')
@@ -30,7 +31,7 @@ const adminMiddleware = async (req, res, next) => {
   const { user } = req
   console.log('USER', user)
 
-  if (user.role !== 'admin') {
+  if (!user || user.role !== 'admin') {
     throw new CustomError.Unauthenticated(
       'Admin privileges required to access this route'
     )

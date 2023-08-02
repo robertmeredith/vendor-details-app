@@ -20,3 +20,18 @@ export function formatInstagramUsername(input) {
     return input
   }
 }
+
+
+// Format URL function
+export function formatUrl(input) {
+  // Create a regex object with the pattern for the URL
+  const urlRegex = /(https?:\/\/)?(www\.)?([a-zA-Z0-9.-]+)\/?/
+  // Test the input against the regex and store the result in a variable
+  const result = urlRegex.exec(input)
+  // If the result is not null, return the third group (the domain)
+  if (result) {
+    return result[3]
+  }
+  // Otherwise, return the input as it is
+  return input
+}
