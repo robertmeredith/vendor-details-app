@@ -5,11 +5,6 @@ const passwordRules =
 // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
 
 export const registrationSchema = yup.object().shape({
-  name: yup
-    .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(30, 'Name must be shorter than 30 characters')
-    .required('Name is required'),
   email: yup.string().email('Please enter a valid email').required('Required'),
   password: yup
     .string()

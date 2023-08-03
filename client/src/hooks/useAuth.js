@@ -33,7 +33,7 @@ export default function useAuth() {
     onSuccess: (user) => {
       if (user) {
         queryClient.setQueryData(['user'], user)
-        navigate('/')
+        navigate('/vendors')
         toast.success('Success! You are now registered!')
       }
     },

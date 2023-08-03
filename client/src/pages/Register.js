@@ -8,9 +8,9 @@ import { useMutation } from '@tanstack/react-query'
 import { alertSuccess } from '../reducers/alertReducer'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import useAuth from '../hooks/useAuth'
 
 const initialValues = {
-  name: '',
   email: '',
   password: '',
   confirmPassword: '',
@@ -19,6 +19,7 @@ const initialValues = {
 const Register = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { registerUser } = useAuth()
 
   // Create user mutation
   const registerUserMutation = useMutation({
@@ -37,7 +38,9 @@ const Register = () => {
 
   // HANDLE SUBMIT
   const handleSubmit = async (values) => {
-    registerUserMutation.mutate(values)
+    console.log('HANDLE SUBMIT');
+    console.log('VALUES', values)
+    registerUser(values)
   }
 
   return (
@@ -59,6 +62,7 @@ const Register = () => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
+          // TODO: Uncomment this line to enable validation and handle the validation as not currenly showing errors
           validationSchema={registrationSchema}
           validateOnChange={false}
           validateOnBlur={false}
@@ -95,7 +99,7 @@ const Register = () => {
                   disabled={!props.dirty || props.isSubmitting}
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-60"
                 >
-                  Sign in
+                  Sign up
                 </button>
               </div>
             </Form>
