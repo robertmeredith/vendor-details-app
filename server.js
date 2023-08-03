@@ -58,7 +58,7 @@ app.use(mongoSanitize())
 // DEPLOYMENT
 // const __dirName = dirname(require.main.filename)
 // DEPLOYMENT - location of build file
-// app.use(express.static(path.resolve(__dirName, '../client/build')))
+app.use(express.static(path.resolve(__dirName, 'client/build')))
 
 app.get('/api/v1', (req, res) => {
   res.status(205).json({ msg: 'Welcome' })
@@ -75,7 +75,7 @@ app.use('/api/v1/settings', userSettingsRouter)
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'client/build', 'index.html'))
 })
-app.use(express.static('client/build'))
+// app.use(express.static('client/build'))
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
