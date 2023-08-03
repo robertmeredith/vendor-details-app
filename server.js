@@ -56,7 +56,7 @@ app.use(mongoSanitize())
 // }
 
 // DEPLOYMENT
-// const __dirName = dirname(require.main.filename)
+const __dirName = dirname(require.main.filename)
 // DEPLOYMENT - location of build file
 app.use(express.static(path.resolve(__dirName, 'client/build')))
 
