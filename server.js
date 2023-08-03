@@ -46,7 +46,19 @@ app.use(morgan('tiny'))
 app.use(express.json())
 
 // DEPLOYMENT  - security
-app.use(helmet())
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: [
+        "'self'",
+        'data:',
+        'https://images.unsplash.com',
+        'https://tailwindui.com',
+      ],
+    },
+  })
+)
 app.use(xss())
 app.use(mongoSanitize())
 
