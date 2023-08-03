@@ -1,1 +1,1 @@
-web: node server.jsç
+web: node server.js
