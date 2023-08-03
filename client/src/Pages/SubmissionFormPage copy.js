@@ -105,7 +105,7 @@ const SubmissionFormPage = () => {
             onChange={(e) => setClient(e.target.value)}
           />
         </div>
-          {/* PARTNER NAME */}
+        {/* PARTNER NAME */}
         <div>
           <input
             value={partner}

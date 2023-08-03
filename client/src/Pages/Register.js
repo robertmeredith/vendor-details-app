@@ -1,5 +1,4 @@
 import { Formik, Form } from 'formik'
-import Alert from '../components/Alert'
 import CustomFormikInput from '../components/CustomFormikInput'
 import { registrationSchema } from '../validation'
 import { toast } from 'react-toastify'
@@ -7,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import authService from '../services/authService'
 import { useMutation } from '@tanstack/react-query'
 import { alertSuccess } from '../reducers/alertReducer'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 const initialValues = {
@@ -20,9 +19,6 @@ const initialValues = {
 const Register = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
-  // Get Alert state
-  const alert = useSelector((state) => state.alert)
 
   // Create user mutation
   const registerUserMutation = useMutation({
@@ -91,7 +87,6 @@ const Register = () => {
                   type="password"
                   name="confirmPassword"
                 />
-
               </div>
               {/* Login Button */}
               <div className="mt-6">
