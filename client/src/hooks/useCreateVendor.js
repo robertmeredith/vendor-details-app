@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import vendorService from '../services/vendorService'
 import { toast } from 'react-toastify'
 import useUser from './useUser'
-import randomstring from 'randomstring'
 
 
 const useCreateVendor = () => {
