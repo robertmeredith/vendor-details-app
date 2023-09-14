@@ -113,28 +113,31 @@ const Navbar = ({ title, user }) => {
           </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                {navigation.map((item) => (
+              {user ? (
+                <div className="space-y-2 py-6">
+                  {navigation.map((item) => (
+                    <NavbarHamburgerLink
+                      key={item.name}
+                      text={item.name}
+                      path={item.path}
+                      toggleMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="py-6">
                   <NavbarHamburgerLink
-                    key={item.name}
-                    text={item.name}
-                    path={item.path}
+                    text={'Register'}
+                    path="/register"
                     toggleMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
                   />
-                ))}
-              </div>
-              <div className="py-6">
-                <NavbarHamburgerLink
-                  text={'Register'}
-                  path="/register"
-                  toggleMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
-                />
-                <NavbarHamburgerLink
-                  text={'Log in'}
-                  path="/login"
-                  toggleMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
-                />
-              </div>
+                  <NavbarHamburgerLink
+                    text={'Log in'}
+                    path="/login"
+                    toggleMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </Dialog.Panel>
