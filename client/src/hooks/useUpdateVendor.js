@@ -4,11 +4,13 @@ import { toast } from 'react-toastify'
 import useUser from './useUser'
 import { useDispatch } from 'react-redux'
 import { alertWarning } from '../reducers/alertReducer'
+import useErrorHandling from './useErrorHandling'
 
 const useUpdateVendor = () => {
   const queryClient = useQueryClient()
   const user = useUser()
   const dispatch = useDispatch()
+  const { handleError } = useErrorHandling()
 
   // CREATE VENDOR MUTATION
   const updateVendorMutation = useMutation({
@@ -18,7 +20,8 @@ const useUpdateVendor = () => {
       queryClient.refetchQueries(['vendors', vendorData._id])
       toast.success('Vendor updated successfully!')
     },
-    onError: (error) => dispatch(alertWarning(error.response.data.msg, 5)),
+    // TODO: Change this to toast or error handler
+    onError: (error) => handleError(error),
   })
 
   return updateVendorMutation

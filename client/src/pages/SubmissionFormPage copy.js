@@ -48,7 +48,6 @@ const SubmissionFormPage = () => {
 
   // Useeffect purely to display state - DELETE LATER
   useEffect(() => {
-    console.log('FORM STATE', formState)
   }, [formState])
 
   // GET USER VENDORS

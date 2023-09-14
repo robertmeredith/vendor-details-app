@@ -18,7 +18,6 @@ const ClientSubmissionForm = ({ userId }) => {
 
   // GET USER FORM SETTNGS
   const userSettings = useGetUserSettings(userId)
-  console.log('USER SETTINGS ', userSettings.data)
 
   // Show loading state
   if (getUserVendors.isLoading || userSettings.isLoading) {

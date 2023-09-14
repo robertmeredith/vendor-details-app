@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 
-
 // import middleware
 const {
   authMiddleware,
@@ -10,7 +9,7 @@ const {
 
 // import controller actions
 const {
-  getAllSubmissions,
+  getAllMySubmissions,
   createSubmission,
   getSingleSubmission,
   editSubmission,
@@ -21,7 +20,7 @@ const {
 // Get all submissions / create submission
 router
   .route('/')
-  .get(authMiddleware, adminMiddleware, getAllSubmissions)
+  .get(authMiddleware, getAllMySubmissions)
   .post(createSubmission)
 
 // Get all user submissions

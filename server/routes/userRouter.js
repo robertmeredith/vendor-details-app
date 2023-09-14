@@ -1,13 +1,19 @@
 const express = require('express')
 const router = express.Router()
+const { authMiddleware } = require('../middleware/authMiddleware')
 
-const { getUser, getAllUsers, getUserSettings, getUserVendors } = require('../controllers/userController')
+const {
+  getUser,
+  getAllUsers,
+  getUserSettings,
+  getUserVendors,
+} = require('../controllers/userController')
 
 // GET - all users
 router.get('/', getAllUsers)
 
 // GET - single user
-router.get('/:id', getUser)
+router.get('/:id', authMiddleware, getUser)
 
 // GET - user settings
 router.get('/:id/settings', getUserSettings)

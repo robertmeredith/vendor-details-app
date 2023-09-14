@@ -321,7 +321,7 @@ const SettingsForm = () => {
                       htmlFor="first-name"
                       className="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5 sr-only"
                     >
-                      Add vendor
+                      Add vendor type
                     </label>
                     <div className="sm:mt-0">
                       <input
@@ -340,7 +340,7 @@ const SettingsForm = () => {
                       className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50 transition "
                       onClick={addCustomVendorType}
                     >
-                      Add vendor
+                      Add vendor type
                     </button>
                   </div>
                 </div>

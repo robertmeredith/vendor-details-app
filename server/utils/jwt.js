@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const CustomError = require('../errors')
 
 const createJWT = (payload) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET, {

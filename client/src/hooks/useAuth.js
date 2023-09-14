@@ -8,7 +8,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function useAuth() {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
   const queryClient = useQueryClient()
 
   // LOGIN
@@ -17,7 +16,7 @@ export default function useAuth() {
     onSuccess: (user) => {
       if (user) {
         queryClient.setQueryData(['user'], user)
-        navigate('/')
+        navigate('/submissions')
         toast.success('Logged in!')
       }
     },

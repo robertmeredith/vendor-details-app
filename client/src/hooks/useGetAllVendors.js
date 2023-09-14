@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import useUser from './useUser'
 import vendorService from '../services/vendorService'
-import { toast } from 'react-toastify'
+import useErrorHandling from './useErrorHandling'
 
 const useGetAllVendors = (vendorId) => {
-  // get current logged in user
   const user = useUser()
-  const queryClient = useQueryClient()
+
+  const { handleError } = useErrorHandling()
 
   const fallback = {
     count: 0,
@@ -23,7 +23,7 @@ const useGetAllVendors = (vendorId) => {
     queryKey: ['vendors'],
     queryFn: () => vendorService.getAllVendors(user),
     placeholderData: fallback,
-    onSuccess: (data) => console.log('GET ALL VENDORS', data),
+    onError: (error) => handleError(error),
   })
 
   return {

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import Feature from '../components/Feature'
 
 const Home = ({ user }) => {
   const navigate = useNavigate()
@@ -10,8 +11,8 @@ const Home = ({ user }) => {
   return (
     <>
       {/* Hero */}
-      <div className="overflow-hidden ">
-        <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="overflow-hidden">
+        <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 py-20 mb-24">
           <div className="relative mx-auto max-w-4xl grid space-y-5 sm:space-y-10">
             {/* Title */}
             <div className="text-center">
@@ -71,7 +72,8 @@ const Home = ({ user }) => {
             </div>
             {/* End Avatar Group */}
             {/* Form */}
-            <form>
+
+            {/* <form>
               <div className="mx-auto max-w-2xl sm:flex sm:space-x-3 p-3 bg-white border rounded-lg shadow-lg shadow-gray-100">
                 <div className="pb-2 sm:pb-0 sm:flex-[1_0_0%]">
                   <label
@@ -106,11 +108,11 @@ const Home = ({ user }) => {
                     type="button"
                     className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
                   >
-                    Get Started
+                    Sign in
                   </button>
                 </div>
               </div>
-            </form>
+            </form> */}
             {/* End Form */}
             {/* SVG Element */}
             <div
@@ -178,6 +180,7 @@ const Home = ({ user }) => {
         </div>
       </div>
       {/* End Hero */}
+      <Feature />
     </>
   )
 }

@@ -3,12 +3,14 @@ const API_URL_USERS = '/api/v1/users'
 
 // useUser Function
 const getUser = async (user) => {
+  console.log('getUser - user ' , user);
   if (!user) return null
   const response = await axios.get(`/api/v1/users/${user.user.id}`, {
     headers: {
       Authorization: `Bearer ${user.token}`,
     },
   })
+  console.log('getUser ', response);
 
   return await response.data
 }

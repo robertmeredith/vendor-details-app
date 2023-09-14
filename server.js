@@ -62,13 +62,15 @@ app.use(
 app.use(xss())
 app.use(mongoSanitize())
 
-// if (process.env.NODE_ENV === 'production') {
-//   // Set static folder
-//   app.use(express.static('client/build'))
-// }
-
 // DEPLOYMENT
 const __dirName = dirname(require.main.filename)
+
+// Check if the environment is production
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the 'client/build' directory
+  app.use(express.static(path.resolve(__dirname, 'client/build')))
+}
+
 // DEPLOYMENT - location of build file
 app.use(express.static(path.resolve(__dirName, 'client/build')))
 
@@ -84,9 +86,9 @@ app.use('/api/v1/settings', userSettingsRouter)
 
 // DEPLOYMENT - after trying above routes, serve index.html file
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirName, 'client/build', 'index.html'))
-})
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirName, 'client/build', 'index.html'))
+// })
 // app.use(express.static('client/build'))
 
 app.use(notFoundMiddleware)
@@ -95,6 +97,7 @@ app.use(errorHandlerMiddleware)
 // Function to connect to database, then if successful spin up server
 const start = async () => {
   try {
+    console.log('ENVIRONMENT = ', process.env.NODE_ENV)
     await connectDB(MONGO_URI)
     console.log('Database is connected')
     app.listen(PORT, () => console.log(`Server is listening on PORT ${PORT}`))

@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import store from './store'
 import queryClient from './react-query/queryClient.js'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import('preline')
+// import('preline')
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(

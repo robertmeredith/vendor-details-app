@@ -12,8 +12,7 @@ const getAllUsers = async (req, res, next) => {
   res.status(200).json({ users })
 }
 
-// GET - single user
-// TODO: This route should not be publicaly available - includes email address of user - what is this route for?
+// GET - single user - used by useUser hook on front end
 const getUser = async (req, res) => {
   const { id: userId } = req.params
 

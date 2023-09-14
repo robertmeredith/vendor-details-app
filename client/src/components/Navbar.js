@@ -27,12 +27,10 @@ const Navbar = ({ title, user }) => {
         {/* Logo */}
         <div className="flex lg:flex-1">
           <Link to="/" className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
-            <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt=""
-            />
+            <span className="sr-only">Vendor Love</span>
+            <h2 className="text-2xl font-semi-bold under text-violet-800 hover:text-indigo-600 hover:font-bold hover:scale-105 transition-all">
+              Vendor Love
+            </h2>
           </Link>
         </div>
         {/* Hamburger Menu */}
@@ -51,6 +49,10 @@ const Navbar = ({ title, user }) => {
             {navigation.map((item) => (
               <NavbarLink key={item.name} text={item.name} path={item.path} />
             ))}
+            <NavbarLink
+              text="User Access Form"
+              path={`/user/${user.details.id}/form`}
+            />
           </div>
         )}
         {/* Navbar Links */}
@@ -66,12 +68,20 @@ const Navbar = ({ title, user }) => {
               Log out
             </Link>
           ) : (
-            <Link
-              to={'/login'}
-              className="text-sm font-semibold leading-6 text-gray-900"
-            >
-              Log in <span aria-hidden="true">&rarr;</span>
-            </Link>
+            <div className="flex gap-6">
+              <Link
+                to={'/register'}
+                className="text-sm font-semibold leading-6 text-gray-900"
+              >
+                Register
+              </Link>
+              <Link
+                to={'/login'}
+                className="text-sm font-semibold leading-6 text-gray-900"
+              >
+                Log in <span aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
           )}
         </div>
       </nav>
@@ -114,6 +124,11 @@ const Navbar = ({ title, user }) => {
                 ))}
               </div>
               <div className="py-6">
+                <NavbarHamburgerLink
+                  text={'Register'}
+                  path="/register"
+                  toggleMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
+                />
                 <NavbarHamburgerLink
                   text={'Log in'}
                   path="/login"

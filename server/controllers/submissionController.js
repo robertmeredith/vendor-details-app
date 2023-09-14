@@ -21,6 +21,23 @@ const getAllSubmissions = async (req, res) => {
   res.status(200).json({ count: submissions.length, submissions })
 }
 
+// GET ALL USERS SUBMISSIONS
+const getAllMySubmissions = async (req, res) => {
+  const { user } = req
+
+  const submissions = await Submission.find({ user: user._id }).populate({
+    path: 'vendors',
+    populate: [
+      {
+        path: 'vendor',
+        model: 'Vendor',
+      },
+    ],
+  })
+  console.log('GET ALL MY SUBMISSIONS ', submissions)
+  res.status(200).json({ count: submissions.length, submissions })
+}
+
 // CREATE SUBMISSION
 const createSubmission = async (req, res) => {
   const { user, client, partner, email, date, vendors } = req.body
@@ -113,6 +130,7 @@ const getSingleSubmission = async (req, res, next) => {
 
 // EDIT SUBMISSION
 const editSubmission = async (req, res) => {
+  //TODO: Does this need to be verified against user making request
   const { id: submissionId } = req.params
 
   const submission = await Submission.findById(submissionId)
@@ -164,4 +182,5 @@ module.exports = {
   editSubmission,
   deleteSubmission,
   getCurrentUserSubmissions,
+  getAllMySubmissions,
 }

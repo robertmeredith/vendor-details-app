@@ -17,19 +17,13 @@ import { Route, Routes } from 'react-router-dom'
 import useUser from './hooks/useUser'
 import { useNavigate } from 'react-router-dom'
 import Auth from './components/Auth'
-import { useEffect } from 'react'
 import { toastSettings } from './helpers/toastSettingsHelper'
+import { useLocation } from 'react-router-dom'
+import Footer from './components/Footer'
 
 function App() {
   const user = useUser()
   const navigate = useNavigate()
-
-  useEffect(() => {
-    console.log('APP - useEffect running', user)
-    if (!user) {
-      navigate('/')
-    }
-  }, [user])
 
   return (
     <div className="min-h-screen">
@@ -83,7 +77,10 @@ function App() {
             }
           />
           <Route path="/form" element={<SubmissionFormPage />} />
-          <Route path="/:userId/form" element={<ClientSubmissionFormPage />} />
+          <Route
+            path="/user/:userId/form"
+            element={<ClientSubmissionFormPage />}
+          />
           <Route
             path="/settings"
             element={
@@ -93,6 +90,7 @@ function App() {
             }
           />
         </Routes>
+        <Footer className="" />
       </div>
     </div>
   )

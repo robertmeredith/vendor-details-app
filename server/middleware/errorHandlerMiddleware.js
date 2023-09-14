@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes')
 
 const errorHandler = (err, req, res, next) => {
+  console.log('REQUEST PATH', req.path);
   console.log('Res status: ', res.statusCode)
   console.log('Error Name', err.name)
   console.log('Error Value', err.value)
