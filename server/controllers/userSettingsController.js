@@ -14,7 +14,6 @@ const getAllUserSettings = async (req, res) => {
 // CREATE USER SETTINGS
 const createCurrentUserSettings = async (req, res) => {
   const { user } = req
-  console.log('CREATE USER SETTINGS', user)
 
   const exists = await UserSettings.findOne({ user })
 
@@ -51,7 +50,6 @@ const getSingleUserSettings = async (req, res, next) => {
     const { id: userId } = req.params
 
     const userSettings = await UserSettings.findOne({ user: userId })
-    console.log('GET USER SETTINGS', userSettings)
 
     res.status(StatusCodes.OK).json({ userSettings })
   }

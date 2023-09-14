@@ -8,7 +8,6 @@ const { StatusCodes } = require('http-status-codes')
 
 // GET USER VENDORS
 const getVendors = async (req, res) => {
-  console.log('GET VENDORS CONTROLLER REQ QUERY', req.query)
   const { userId } = req.query
   const vendors = await Vendor.find({ user: userId })
 
@@ -43,13 +42,11 @@ const getAllVendors = async (req, res, next) => {
 // CREATE VENDOR
 const createVendor = async (req, res, next) => {
   const { user } = req
-  console.log('CREATE VENDOR CONTROLLER REQ BODY', req.body)
   const { name, instagram, website, email } = req.body
 
   // Convert any non-secure http addresses to secure ones
   // if (website.startsWith('http://')) {
   //   // website = `https://${website.split('http://')[1]}`
-  //   console.log('------- SHOUTING ---------')
   //   const safeWebsite = `https://${website.split('http://')[1]}`
   //   console.log('SAFE WEBSITE ', safeWebsite)
   //   website = safeWebsite
@@ -78,8 +75,6 @@ const createVendor = async (req, res, next) => {
     website,
     email,
   })
-  console.log('CREATE VENDOR CONTROLLER RETURN VENDOR', vendor)
-
 
   res.status(StatusCodes.OK).json({ vendor })
 }

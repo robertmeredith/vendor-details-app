@@ -17,7 +17,6 @@ const getAllSubmissions = async (req, res) => {
       },
     ],
   })
-  console.log('SUBMISSIONS ', submissions)
   res.status(200).json({ count: submissions.length, submissions })
 }
 
@@ -34,14 +33,12 @@ const getAllMySubmissions = async (req, res) => {
       },
     ],
   })
-  console.log('GET ALL MY SUBMISSIONS ', submissions)
   res.status(200).json({ count: submissions.length, submissions })
 }
 
 // CREATE SUBMISSION
 const createSubmission = async (req, res) => {
   const { user, client, partner, email, date, vendors } = req.body
-  console.log('REQ BODY ', req.body)
 
   // Remove entries from vendors array where vendor name is empty
   const populatedVendors = vendors.filter((v) => v.vendor.name.trim() !== '')
