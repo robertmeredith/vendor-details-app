@@ -14,9 +14,6 @@ const SubmissionsListPage = () => {
   const [filter, setFilter] = useState('')
   const user = useUser()
 
-  if (isLoading) return <Loading />
-  if (isError) return <p>There was an error fetching the records</p>
-
   // FILTER VENDORS WHEN SEARCHING - includes both name and website
   const filteredSubmissions = data?.submissions?.filter(
     (submission) =>
@@ -62,7 +59,16 @@ const SubmissionsListPage = () => {
             Send Form to Client
           </button>
         </div>
-        {data.submissions.length === 0 ? (
+
+        {isLoading ? (
+          <div className="h-60 flex justify-center items-center text-slate-400">
+            <h2>Loading client form submissions...</h2>
+          </div>
+        ) : isError ? (
+          <div className="h-60 flex justify-center items-center text-slate-400">
+            <h2>There was an error...</h2>
+          </div>
+        ) : data.submissions.length === 0 ? (
           <div className="h-60 flex justify-center items-center text-slate-400">
             <h2>
               No form records in the database. Once you have some form

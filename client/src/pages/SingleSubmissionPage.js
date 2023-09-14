@@ -36,8 +36,17 @@ const SingleSubmissionPage = () => {
     toast.success('Copied to clipboard!')
   }
 
-  if (isLoading) return <p>Loading...</p>
-  if (isError) return <p>{error.message}</p>
+  if (isLoading)
+    return (
+      <div className="h-60 flex justify-center items-center text-slate-400">
+        <h2>Loading...</h2>
+      </div>
+    )
+  if (isError) return (
+    <div className="h-60 flex justify-center items-center text-slate-400">
+      <h2>There was an error</h2>
+    </div>
+  )
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4 sm:mt-8 mb-14">

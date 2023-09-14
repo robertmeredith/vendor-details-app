@@ -5,10 +5,6 @@ const SubmissionTableRow = ({ entry }) => {
   const { client, partner, eventDate, _id, email, vendors } = entry
   const venue = vendors.find((v) => v.vendorType.toLowerCase() === 'venue')
 
-  console.log(venue);
-
-  console.log('ENTRY ', entry)    
-
   return (
     <tr>
       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">

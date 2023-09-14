@@ -5,7 +5,6 @@ import ClientSubmissionForm from '../components/ClientSubmissionForm'
 const text = 'Please fill out the form with the vendor details for your event'
 
 const ClientSubmissionFormPage = () => {
-  const params = useParams()
   const { userId } = useParams()
 
 

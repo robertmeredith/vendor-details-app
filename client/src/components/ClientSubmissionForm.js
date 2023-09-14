@@ -21,7 +21,20 @@ const ClientSubmissionForm = ({ userId }) => {
 
   // Show loading state
   if (getUserVendors.isLoading || userSettings.isLoading) {
-    return <p>Loading....</p>
+    return (
+      <div className="h-60 flex justify-center items-center text-slate-400">
+        <h2>Loading form</h2>
+      </div>
+    )
+  }
+
+  // Show error state
+  if (getUserVendors.isError || userSettings.isError) {
+    return (
+      <div className="h-60 flex justify-center items-center text-slate-400">
+        <h2>There was an error</h2>
+      </div>
+    )
   }
 
   const defaultVendorTypes = userSettings.data.defaultVendorTypes
@@ -53,7 +66,6 @@ const ClientSubmissionForm = ({ userId }) => {
       vendors: [...currentValues.vendors, newVendor],
     })
   }
-
   return (
     <Formik
       // enableReinitialize allows Form to update if a different vendor is seleced to edit

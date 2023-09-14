@@ -15,7 +15,11 @@ const SingleSubmissionTable = ({ submission }) => {
   }
 
   if (isLoading) {
-    return <p>Loading....</p>
+    return (
+      <div className="h-60 flex justify-center items-center text-slate-400">
+        <h2>Loading...</h2>
+      </div>
+    )
   }
 
   console.log(userSettings)
