@@ -13,6 +13,7 @@ function useErrorHandling() {
       navigate('/login')
       localStorageHelper.clearStoredUser()
       queryClient.setQueryData(['user'], null)
+      queryClient.invalidateQueries()
       toast.warning(error.response.data.msg, 2)
     } else {
       // Handle other error cases here if needed
