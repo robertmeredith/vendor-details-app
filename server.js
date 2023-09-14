@@ -85,11 +85,10 @@ app.use('/api/v1/vendors', vendorRouter)
 app.use('/api/v1/settings', userSettingsRouter)
 
 // DEPLOYMENT - after trying above routes, serve index.html file
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.resolve(__dirName, 'client/build', 'index.html'))
-// })
-// app.use(express.static('client/build'))
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirName, 'client/build', 'index.html'))
+})
+app.use(express.static('client/build'))
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
