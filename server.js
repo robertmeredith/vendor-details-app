@@ -85,8 +85,11 @@ app.use('/api/v1/vendors', vendorRouter)
 app.use('/api/v1/settings', userSettingsRouter)
 
 // DEPLOYMENT - after trying above routes, serve index.html file
-app.get('*', (req, res) => {
+if (process.env.NODE_ENV === 'production') {
   res.sendFile(path.resolve(__dirName, 'client/build', 'index.html'))
+}
+
+app.get('*', (req, res) => {
 })
 app.use(express.static('client/build'))
 

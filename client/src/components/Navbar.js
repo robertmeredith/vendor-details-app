@@ -48,11 +48,12 @@ const Navbar = ({ title, user }) => {
           <div className="hidden md:flex md:gap-x-12">
             {navigation.map((item) => (
               <NavbarLink key={item.name} text={item.name} path={item.path} />
-            ))}
-            <NavbarLink
+              ))}
+              {/* Navbar Route for testing client access */}
+            {/* <NavbarLink
               text="User Access Form"
               path={`/user/${user.details.id}/form`}
-            />
+            /> */}
           </div>
         )}
         {/* Navbar Links */}
