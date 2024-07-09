@@ -20,6 +20,7 @@ const getUser = async (req, res) => {
   res.status(200).json(user)
 }
 
+
 // GET - user settings
 const getUserSettings = async (req, res) => {
   const { id: userId } = req.params

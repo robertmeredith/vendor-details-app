@@ -86,7 +86,7 @@ app.use('/api/v1/settings', userSettingsRouter)
 
 // DEPLOYMENT - after trying above routes, serve index.html file
 
-res.sendFile(path.resolve(__dirName, 'client/build', 'index.html'))
+// res.sendFile(path.resolve(__dirName, 'client/build', 'index.html'))
 
 app.get('*', (req, res) => {})
 app.use(express.static('client/build'))

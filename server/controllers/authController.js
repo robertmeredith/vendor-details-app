@@ -70,7 +70,26 @@ const login = async (req, res, next) => {
   })
 }
 
+// CHANGE PASSWORD
+const changePassword = async (req, res) => {
+  console.log('REQ.PARAMS:', req.params)
+  const { id } = req.params
+  const { newPassword } = req.body
+
+  const user = await User.findOne({ id })
+
+  if (!user) {
+    throw new CustomError.NotFound(`No user with id : ${id}`)
+  }
+
+  user.password = newPassword
+  const updatedUser = await user.save()
+
+  res.status(StatusCodes.OK).json(updatedUser)
+}
+
 module.exports = {
   register,
   login,
+  changePassword,
 }
